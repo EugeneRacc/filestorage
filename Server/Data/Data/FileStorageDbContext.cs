@@ -13,7 +13,7 @@ namespace Data.Data
                 .HasOne(u => u.Role)
                 .WithMany(r => r.Users);
             modelBuilder.Entity<User>()
-                .HasOne(u => u.UserDiskSpace)
+                .HasOne(u => u.DiskSpace)
                 .WithOne(uds => uds.User);
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Files)
@@ -26,6 +26,6 @@ namespace Data.Data
         public DbSet<FileMeta> FileMetas { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<UserDiskSpace> UserDiskSpaces { get; set; }
+        public DbSet<DiskSpace> UserDiskSpaces { get; set; }
     }
 }

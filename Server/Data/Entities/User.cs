@@ -18,7 +18,7 @@ namespace Data.Entities
         public int RoleId { get; set; }
         public int UserDiskSpaceId { get; set; }
         public Role Role { get; set; }
-        public UserDiskSpace UserDiskSpace { get; set; }
+        public DiskSpace DiskSpace { get; set; }
         public ICollection<File> Files { get; set; }
     }
 }
