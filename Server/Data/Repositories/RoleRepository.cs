@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Data.Data;
 using Data.Entities;
 using Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Data.Repositories
 {
@@ -14,34 +17,46 @@ namespace Data.Repositories
         {
             _fileStorageDbContext = fileStorageDbContext;
         }
-        public Task<IEnumerable<Role>> GetAllAsync()
+        public async Task<IEnumerable<Role>> GetAllAsync()
         {
-            throw new System.NotImplementedException();
+            var roles = await _fileStorageDbContext.Set<Role>().ToListAsync();
+            return roles;
         }
 
-        public Task<Role> GetByIdAsync(int id)
+        public async Task<Role> GetByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var role = await _fileStorageDbContext.Set<Role>().FindAsync(id);
+            return role;
         }
 
-        public Task AddAsync(Role entity)
+        public async Task AddAsync(Role entity)
         {
-            throw new System.NotImplementedException();
+            await _fileStorageDbContext.Set<Role>().AddAsync(entity);
         }
 
         public void Delete(Role entity)
         {
-            throw new System.NotImplementedException();
+            EntityEntry entityEntry = _fileStorageDbContext.Entry<Role>(entity);
+            entityEntry.State = EntityState.Deleted;
         }
 
-        public Task DeleteByIdAsync(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var entity = await _fileStorageDbContext.Set<Role>().FindAsync(id);
+            if (entity != null)
+            {
+                Delete(entity);
+            }
+            else
+            {
+                throw new NullReferenceException($"Entity with such an id isn't exist {nameof(entity)}");
+            }
         }
 
         public void Update(Role entity)
         {
-            throw new System.NotImplementedException();
+            EntityEntry entityEntry = _fileStorageDbContext.Entry<Role>(entity);
+            entityEntry.State = EntityState.Modified;
         }
     }
 }

@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Data.Data;
 using Data.Entities;
 using Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Data.Repositories
 {
@@ -14,34 +17,43 @@ namespace Data.Repositories
         {
             _fileStorageDbContext = fileStorageDbContext;
         }
-        public Task<IEnumerable<DiskSpace>> GetAllAsync()
+        public async Task<IEnumerable<DiskSpace>> GetAllAsync()
         {
-            throw new System.NotImplementedException();
+            var diskSpaces = await _fileStorageDbContext.Set<DiskSpace>().ToListAsync();
+            return diskSpaces;
         }
 
-        public Task<DiskSpace> GetByIdAsync(int id)
+        public async Task<DiskSpace> GetByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var diskSpace = await _fileStorageDbContext.Set<DiskSpace>().FindAsync(id);
+            return diskSpace;
         }
 
-        public Task AddAsync(DiskSpace entity)
+        public async Task AddAsync(DiskSpace entity)
         {
-            throw new System.NotImplementedException();
+            await _fileStorageDbContext.Set<DiskSpace>().AddAsync(entity);
         }
 
         public void Delete(DiskSpace entity)
         {
-            throw new System.NotImplementedException();
+            EntityEntry entityEntry = _fileStorageDbContext.Entry<DiskSpace>(entity);
+            entityEntry.State = EntityState.Deleted;
         }
 
-        public Task DeleteByIdAsync(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var entity = await _fileStorageDbContext.Set<DiskSpace>().FindAsync(id);
+            if (entity == null)
+            {
+                throw new NullReferenceException();
+            }
+            Delete(entity);
         }
 
         public void Update(DiskSpace entity)
         {
-            throw new System.NotImplementedException();
+            EntityEntry entityEntry = _fileStorageDbContext.Entry<DiskSpace>(entity);
+            entityEntry.State = EntityState.Modified;
         }
     }
 }

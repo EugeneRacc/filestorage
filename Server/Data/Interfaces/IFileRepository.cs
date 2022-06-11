@@ -6,7 +6,6 @@ namespace Data.Interfaces
 {
     public interface IFileRepository : IRepository<File>
     {
-        Task<IEnumerable<File>> GetAllWithDetailsAsync();
-        Task<File> GetByIdWithDetailsAsync(int id);
+       
     }
 }

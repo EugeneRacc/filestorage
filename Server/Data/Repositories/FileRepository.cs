@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Data.Data;
 using Data.Entities;
 using Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Data.Repositories
 {
-    public class FileRepository : IFileMetaRepository
+    public class FileRepository : IFileRepository
     {
         private readonly FileStorageDbContext _fileStorageDbContext;
 
@@ -14,34 +17,48 @@ namespace Data.Repositories
         {
             _fileStorageDbContext = fileStorageDbContext;
         }
-        public Task<IEnumerable<FileMeta>> GetAllAsync()
+
+        public async Task<IEnumerable<File>> GetAllAsync()
         {
-            throw new System.NotImplementedException();
+            var files = await _fileStorageDbContext.Set<File>().ToListAsync();
+            return files;
         }
 
-        public Task<FileMeta> GetByIdAsync(int id)
+        public async Task<File> GetByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var file = await _fileStorageDbContext.Set<File>().FindAsync(id);
+            return file;
         }
 
-        public Task AddAsync(FileMeta entity)
+        public async Task AddAsync(File entity)
         {
-            throw new System.NotImplementedException();
+            await _fileStorageDbContext.Set<File>().AddAsync(entity);
         }
 
-        public void Delete(FileMeta entity)
+        public void Delete(File entity)
         {
-            throw new System.NotImplementedException();
+            EntityEntry entityEntry = _fileStorageDbContext.Entry<File>(entity);
+            entityEntry.State = EntityState.Deleted;
         }
 
-        public Task DeleteByIdAsync(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var entity = await _fileStorageDbContext.Set<File>().FindAsync(id);
+            if (entity != null)
+            {
+                Delete(entity);
+            }
+            else
+            {
+                throw new NullReferenceException($"Entity with such an id isn't exist {nameof(entity)}");
+            }
         }
 
-        public void Update(FileMeta entity)
+        public void Update(File entity)
         {
-            throw new System.NotImplementedException();
+            EntityEntry entityEntry = _fileStorageDbContext.Entry<File>(entity);
+            entityEntry.State = EntityState.Modified;
         }
+        
     }
 }

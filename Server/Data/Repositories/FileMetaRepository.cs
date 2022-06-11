@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Data.Data;
 using Data.Entities;
 using Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Data.Repositories
 {
@@ -14,34 +18,43 @@ namespace Data.Repositories
         {
             _fileStorageDbContext = fileStorageDbContext;
         }
-        public Task<IEnumerable<FileMeta>> GetAllAsync()
+        public async Task<IEnumerable<FileMeta>> GetAllAsync()
         {
-            throw new System.NotImplementedException();
+            var filesMeta = await _fileStorageDbContext.Set<FileMeta>().ToListAsync();
+            return filesMeta;
         }
 
-        public Task<FileMeta> GetByIdAsync(int id)
+        public async Task<FileMeta> GetByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var fileMeta = await _fileStorageDbContext.Set<FileMeta>().FindAsync(id);
+            return fileMeta;
         }
 
-        public Task AddAsync(FileMeta entity)
+        public async Task AddAsync(FileMeta entity)
         {
-            throw new System.NotImplementedException();
+            await _fileStorageDbContext.Set<FileMeta>().AddAsync(entity);
         }
 
         public void Delete(FileMeta entity)
         {
-            throw new System.NotImplementedException();
+            EntityEntry entityEntry = _fileStorageDbContext.Entry<FileMeta>(entity);
+            entityEntry.State = EntityState.Deleted;
         }
 
-        public Task DeleteByIdAsync(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var entity = await _fileStorageDbContext.Set<FileMeta>().FindAsync(id);
+            if (entity == null)
+            {
+                throw new NullReferenceException();
+            }
+            Delete(entity);
         }
 
         public void Update(FileMeta entity)
         {
-            throw new System.NotImplementedException();
+            EntityEntry entityEntry = _fileStorageDbContext.Entry<FileMeta>(entity);
+            entityEntry.State = EntityState.Modified;
         }
     }
 }
