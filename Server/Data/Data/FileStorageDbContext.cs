@@ -9,8 +9,18 @@ namespace Data.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Fluent Api
-            
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Role)
+                .WithMany(r => r.Users);
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.UserDiskSpace)
+                .WithOne(uds => uds.User);
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Files)
+                .WithOne(f => f.User);
+            modelBuilder.Entity<File>()
+                .HasOne(f => f.FileMeta)
+                .WithOne(fm => fm.File);
         }
         public DbSet<File> Files { get; set; }
         public DbSet<FileMeta> FileMetas { get; set; }

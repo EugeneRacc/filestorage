@@ -9,7 +9,7 @@ namespace Data.Entities
         public DateTime Creation { get; set; }
         public DateTime Modify { get; set; }
         public int FileId { get; set; }
-        public ModificationType ModificationTypeType { get; set; }
+        public ModificationType ModificationType { get; set; }
         public File File { get; set; }
     }
 }
