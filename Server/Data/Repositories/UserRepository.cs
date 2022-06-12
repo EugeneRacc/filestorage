@@ -59,5 +59,28 @@ namespace Data.Repositories
             EntityEntry entityEntry = _fileStorageDbContext.Entry<User>(entity);
             entityEntry.State = EntityState.Modified;
         }
+
+        public async Task<IEnumerable<User>> GetAllWithDetailsAsync()
+        {
+            var result = await _fileStorageDbContext.Users
+                .Include(f => f.Files)
+                .ThenInclude(fm => fm.FileMeta)
+                .Include(ds => ds.DiskSpace)
+                .Include(r => r.Role)
+                .ToListAsync();
+            return result;
+        }
+
+        public async Task<User> GetByIdWithDetailsAsync(int id)
+        {
+            
+            var result = await _fileStorageDbContext.Users
+                .Include(f => f.Files)
+                .ThenInclude(fm => fm.FileMeta)
+                .Include(ds => ds.DiskSpace)
+                .Include(r => r.Role)
+                .FirstOrDefaultAsync(u => u.Id == id);
+            return result;
+        }
     }
 }

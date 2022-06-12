@@ -24,9 +24,11 @@ public class UserService : IUserService
         return mappedCustomers;
     }
 
-    public Task<UserModel> GetByIdAsync(int id)
+    public async Task<UserModel> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var customer = await db.UserRepository.GetByIdAsync(id);
+        var mappedCustomer = mapper.Map<UserModel>(customer);
+        return mappedCustomer;
     }
 
     public async Task AddAsync(UserModel model)
@@ -37,7 +39,7 @@ public class UserService : IUserService
         }
 
         var check = (await db.UserRepository.GetAllAsync())
-            .FirstOrDefault(x => x.Email == model.email);
+            .FirstOrDefault(x => x.Email == model.Email);
         if (check != null)
         {
             throw new FileStorageException($"The customer with such an email already exist {nameof(model)}");

@@ -10,6 +10,7 @@ public class AutomapperProfile : Profile
     {
         //TODO add mappings from Entities to Models
         CreateMap<User, UserModel>()
-            .ReverseMap();
+            .ForMember(um => um.FilesIds, u
+                => u.MapFrom(src => src.Files.Select(x => x.Id)));
     }
 }
