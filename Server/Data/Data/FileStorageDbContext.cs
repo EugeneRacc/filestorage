@@ -5,7 +5,18 @@ namespace Data.Data
 {
     public class FileStorageDbContext : DbContext
     {
-        public FileStorageDbContext(DbContextOptions<FileStorageDbContext> options) : base(options) { }
+        //public FileStorageDbContext(DbContextOptions<FileStorageDbContext> options) : base(options) { }
+
+        public FileStorageDbContext()
+        {
+            
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(
+                @"Server=localhost,1433;Database=master;User=sa;Password=Docker@123;");
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
