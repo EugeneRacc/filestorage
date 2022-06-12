@@ -73,7 +73,6 @@ namespace Data.Repositories
 
         public async Task<User> GetByIdWithDetailsAsync(int id)
         {
-            
             var result = await _fileStorageDbContext.Users
                 .Include(f => f.Files)
                 .ThenInclude(fm => fm.FileMeta)
