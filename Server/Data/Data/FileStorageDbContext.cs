@@ -17,12 +17,15 @@ namespace Data.Data
             optionsBuilder.UseSqlServer(
                 @"Server=localhost,1433;Database=ms-sql-server;User=sa;Password=Docker@123;");
         }
-*/
+        */
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role)
                 .WithMany(r => r.Users);
+            modelBuilder.Entity<User>()
+                .Property(u => u.UsedDiskSpade)
+                .HasDefaultValue("0");
             modelBuilder.Entity<User>()
                 .HasOne(u => u.DiskSpace)
                 .WithMany(uds => uds.Users);

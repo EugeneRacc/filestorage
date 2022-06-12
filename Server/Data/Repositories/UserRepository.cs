@@ -66,7 +66,6 @@ namespace Data.Repositories
                 .Include(f => f.Files)
                 .ThenInclude(fm => fm.FileMeta)
                 .Include(ds => ds.DiskSpace)
-                .Include(r => r.Role)
                 .ToListAsync();
             return result;
         }

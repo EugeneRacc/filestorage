@@ -9,7 +9,7 @@ public class UserModel
     public int Id { get; set; }
     public string Email { get; set; }
     public string Password { get; set; }
-    public Role Role { get; set; }
-    public BigInteger UsedDiskSpace { get; set; }
+    public string Role{ get; set; }
+    public double UsedDiskSpace { get; set; }
     public ICollection<int> FilesIds { get; set; }
 }

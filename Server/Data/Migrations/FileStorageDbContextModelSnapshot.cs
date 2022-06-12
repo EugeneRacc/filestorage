@@ -145,7 +145,9 @@ namespace Data.Migrations
 
                     b.Property<string>("UsedDiskSpade")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("0");
 
                     b.HasKey("Id");
 
