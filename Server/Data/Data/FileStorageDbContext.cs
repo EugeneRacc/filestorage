@@ -5,9 +5,9 @@ namespace Data.Data
 {
     public class FileStorageDbContext : DbContext
     {
-        //public FileStorageDbContext(DbContextOptions<FileStorageDbContext> options) : base(options) { }
+        public FileStorageDbContext(DbContextOptions<FileStorageDbContext> options) : base(options) { }
 
-        public FileStorageDbContext()
+        /*public FileStorageDbContext()
         {
             
         }
@@ -15,9 +15,9 @@ namespace Data.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                @"Server=localhost,1433;Database=master;User=sa;Password=Docker@123;");
+                @"Server=localhost,1433;Database=ms-sql-server;User=sa;Password=Docker@123;");
         }
-
+*/
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -25,7 +25,7 @@ namespace Data.Data
                 .WithMany(r => r.Users);
             modelBuilder.Entity<User>()
                 .HasOne(u => u.DiskSpace)
-                .WithOne(uds => uds.User);
+                .WithMany(uds => uds.Users);
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Files)
                 .WithOne(f => f.User);

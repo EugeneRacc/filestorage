@@ -15,8 +15,9 @@ namespace Data.Entities
         [Required(ErrorMessage = "This field is required.")]
         public string Password { get; set; }
 
+        public string UsedDiskSpade { get; set; } = "0";
         public int RoleId { get; set; }
-        public int UserDiskSpaceId { get; set; }
+        public int DiskSpaceId { get; set; }
         public Role Role { get; set; }
         public DiskSpace DiskSpace { get; set; }
         public ICollection<File> Files { get; set; }

@@ -1,6 +1,8 @@
 using AutoMapper;
+using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
+using Data.Entities;
 using Data.Interfaces;
 
 namespace Business.Services;
@@ -15,9 +17,11 @@ public class UserService : IUserService
         this.mapper = mapper;
     }
 
-    public Task<IEnumerable<UserModel>> GetAllAsync()
+    public async Task<IEnumerable<UserModel>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var customers = await db.UserRepository.GetAllAsync();
+        var mappedCustomers = mapper.Map<IEnumerable<User>, IEnumerable<UserModel>>(customers);
+        return mappedCustomers;
     }
 
     public Task<UserModel> GetByIdAsync(int id)
@@ -25,9 +29,22 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task AddAsync(UserModel model)
+    public async Task AddAsync(UserModel model)
     {
-        throw new NotImplementedException();
+        if (model == null)
+        {
+            throw new FileStorageException($"The customer cannot be null {nameof(model)}");
+        }
+
+        var check = (await db.UserRepository.GetAllAsync())
+            .FirstOrDefault(x => x.Email == model.email);
+        if (check != null)
+        {
+            throw new FileStorageException($"The customer with such an email already exist {nameof(model)}");
+        }
+        var customer = mapper.Map<UserModel, User>(model);
+        await db.UserRepository.AddAsync(customer);
+        await db.SaveAsync();
     }
 
     public Task UpdateAsync(UserModel model)

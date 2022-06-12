@@ -1,4 +1,9 @@
+using AutoMapper;
+using Business;
+using Business.Interfaces;
+using Business.Services;
 using Data.Data;
+using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApi;
@@ -18,7 +23,18 @@ public class Startup
         {
             services.AddDbContext<FileStorageDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("FileStorage")));
-        
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AutomapperProfile());
+            });
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFileService, FileService>();
+
+
+            
             services.AddControllers();
         }
 

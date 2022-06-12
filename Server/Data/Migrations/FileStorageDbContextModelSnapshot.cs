@@ -34,17 +34,7 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UsedDiskSpace")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("UserDiskSpaces");
                 });
@@ -138,6 +128,9 @@ namespace Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("DiskSpaceId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -150,10 +143,13 @@ namespace Data.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserDiskSpaceId")
-                        .HasColumnType("int");
+                    b.Property<string>("UsedDiskSpade")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DiskSpaceId");
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -161,17 +157,6 @@ namespace Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Data.Entities.DiskSpace", b =>
-                {
-                    b.HasOne("Data.Entities.User", "User")
-                        .WithOne("DiskSpace")
-                        .HasForeignKey("Data.Entities.DiskSpace", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Data.Entities.File", b =>
@@ -195,13 +180,26 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.User", b =>
                 {
+                    b.HasOne("Data.Entities.DiskSpace", "DiskSpace")
+                        .WithMany("Users")
+                        .HasForeignKey("DiskSpaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Data.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("DiskSpace");
+
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Data.Entities.DiskSpace", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Data.Entities.FileMeta", b =>
@@ -217,9 +215,6 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.User", b =>
                 {
-                    b.Navigation("DiskSpace")
-                        .IsRequired();
-
                     b.Navigation("Files");
                 });
 #pragma warning restore 612, 618

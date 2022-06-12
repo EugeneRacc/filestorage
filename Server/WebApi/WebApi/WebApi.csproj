@@ -12,11 +12,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
+      <ProjectReference Include="..\..\Business\Business.csproj" />
+      <ProjectReference Include="..\..\Data\Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Data\Data.csproj" />
+      <Reference Include="AutoMapper, Version=11.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005">
+        <HintPath>..\..\..\..\..\.nuget\packages\automapper\11.0.1\lib\netstandard2.1\AutoMapper.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
