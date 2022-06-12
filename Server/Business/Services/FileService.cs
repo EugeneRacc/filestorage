@@ -1,7 +1,11 @@
 using AutoMapper;
+using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
+using Business.PasswordHash;
+using Data.Entities;
 using Data.Interfaces;
+using File = Data.Entities.File;
 
 namespace Business.Services;
 
@@ -15,28 +19,45 @@ public class FileService : IFileService
         this.mapper = mapper;
     }
 
-    public Task<IEnumerable<FileModel>> GetAllAsync()
+    public async Task<IEnumerable<FileModel>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var files = await db.FileRepository.GetAllAsync();
+        var mappedfiles = mapper.Map<IEnumerable<Data.Entities.File>, IEnumerable<FileModel>>(files);
+        return mappedfiles;
     }
 
-    public Task<FileModel> GetByIdAsync(int id)
+    public async Task<FileModel> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var file = await db.FileRepository.GetByIdAsync(id);
+        var mappedfile = mapper.Map<Data.Entities.File, FileModel>(file);
+        return mappedfile;
     }
 
-    public Task AddAsync(FileModel model)
+    public async Task AddAsync(FileModel model)
     {
-        throw new NotImplementedException();
+        if (model == null)
+        {
+            throw new FileStorageException($"The customer cannot be null {nameof(model)}");
+        }
+        var file = mapper.Map<FileModel, File>(model);
+        await db.FileRepository.AddAsync(file);
+        await db.SaveAsync();
     }
 
-    public Task UpdateAsync(FileModel model)
+    public async Task UpdateAsync(FileModel model)
     {
-        throw new NotImplementedException();
+        if (model == null)
+        {
+            throw new FileStorageException($"The user cannot be null {nameof(model)}");
+        }
+        db.FileRepository.Update(mapper.Map<File>(model));
+        await db.SaveAsync();
     }
 
-    public Task DeleteAsync(int modelId)
+    public async Task DeleteAsync(int modelId)
     {
-        throw new NotImplementedException();
+        await db.FileRepository.DeleteByIdAsync(modelId);
+        await db.SaveAsync();
+        
     }
 }
