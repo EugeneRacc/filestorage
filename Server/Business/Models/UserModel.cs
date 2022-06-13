@@ -13,6 +13,5 @@ public class UserModel
     public string Password { get; set; }
     public int RoleId { get; set; } = 1;
     public string UsedDiskSpace { get; set; } = "0";
-    public string AvailableDiskSpace { get; set; }
     public ICollection<int>? FilesIds { get; set; }
 }
