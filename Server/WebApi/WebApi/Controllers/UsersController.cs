@@ -31,22 +31,6 @@ public class UsersController : ControllerBase
         }
         return Ok(customers);
     }
-
-
     
-    [HttpPost("register")]
-    public async Task<ActionResult> Add([FromBody] UserModel value)
-    {
-        try
-        {
-            await _userService.AddAsync(value);
-        }
-        catch(Exception)
-        {
-            return BadRequest(StatusCode(400));
-        }
-        return CreatedAtAction(nameof(Add), new { id = value.Id }, value);
-    }
-
 
 }

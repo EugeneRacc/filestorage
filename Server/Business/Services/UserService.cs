@@ -74,6 +74,22 @@ public class UserService : IUserService
 
     }
 
+    public async Task<bool> LogInAsync(UserModel model)
+    {
+        var user = (await GetAllAsync()).FirstOrDefault(x => x.Email == model.Email);
+        if (user == null)
+        {
+            throw new NullReferenceException($"User with such email not found {model.Email}");
+        }
+
+        bool isPasswordValid = user.Password.Equals(MD5Hash.GetMD5Hash(model.Password));
+        if (!isPasswordValid)
+        {
+            throw new FileStorageException($"Email or Password isn't valid");
+        }
+
+        return isPasswordValid;
+    }
     public async Task DeleteAsync(int modelId)
     {
         await db.UserRepository.DeleteByIdAsync(modelId);
