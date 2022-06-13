@@ -27,6 +27,12 @@ namespace Data.Data
                 .Property(u => u.UsedDiskSpade)
                 .HasDefaultValue("0");
             modelBuilder.Entity<User>()
+                .Property(u => u.RoleId)
+                .HasDefaultValue(1);
+            modelBuilder.Entity<User>()
+                .Property(u => u.DiskSpaceId)
+                .HasDefaultValue(1);
+            modelBuilder.Entity<User>()
                 .HasOne(u => u.DiskSpace)
                 .WithMany(uds => uds.Users);
             modelBuilder.Entity<User>()

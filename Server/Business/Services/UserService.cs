@@ -46,8 +46,14 @@ public class UserService : IUserService
             throw new FileStorageException($"The customer with such an email already exist {nameof(model)}");
         }
 
+        if (model.Password.Length < 8)
+        {
+            throw new FileStorageException($"Password can't be less then 8 characters {nameof(model.Password)}");
+        }
         model.Password = MD5Hash.GetMD5Hash(model.Password);
         var customer = mapper.Map<UserModel, User>(model);
+        if (customer == null)
+            return;
         await db.UserRepository.AddAsync(customer);
         await db.SaveAsync();
     }
