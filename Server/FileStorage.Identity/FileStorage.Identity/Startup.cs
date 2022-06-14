@@ -2,6 +2,7 @@ using FileStorage.Identity.Data;
 using FileStorage.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 namespace FileStorage.Identity;
 
@@ -47,6 +48,7 @@ public class Startup
             config.LoginPath = "/Auth/Login";
             config.LogoutPath = "/Auth/Logout";
         });
+        services.AddControllersWithViews();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,14 +59,18 @@ public class Startup
             app.UseDeveloperExceptionPage();
         }
 
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(
+                Path.Combine(env.ContentRootPath, "Styles")),
+            RequestPath = "/styles"
+        });
+        
         app.UseRouting();
         app.UseIdentityServer();
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapGet("/", async context =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            endpoints.MapDefaultControllerRoute();
         });
     }
 }
