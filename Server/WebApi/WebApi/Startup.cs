@@ -28,6 +28,16 @@ public class Startup
                 mc.AddProfile(new AutomapperProfile());
             });
             IMapper mapper = mapperConfig.CreateMapper();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyHeader();
+                    policy.AllowAnyMethod();
+                    policy.AllowAnyOrigin();
+                });
+            });
             services.AddSingleton(mapper);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
@@ -50,6 +60,8 @@ public class Startup
 
             app.UseRouting();
 
+            app.UseCors("AllowAll");
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
