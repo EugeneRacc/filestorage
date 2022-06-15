@@ -1,9 +1,10 @@
-namespace FileStorage.Identity.Data;
-
-public class DbInitializer
+namespace FileStorage.Identity.Data
 {
-    public static void Initialize(AuthDbContext context)
+    public class DbInitializer
     {
-        context.Database.EnsureCreated();
+        public static void Initialize(AuthDbContext context)
+        {
+            context.Database.EnsureCreated();
+        }
     }
 }

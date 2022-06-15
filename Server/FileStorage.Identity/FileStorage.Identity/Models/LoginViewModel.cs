@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FileStorage.Identity.Models;
-
+namespace FileStorage.Identity.Models
+{
 public class LoginViewModel
 {
     [Required]
@@ -10,4 +10,5 @@ public class LoginViewModel
     [DataType(DataType.Password)]
     public string Password { get; set; }
     public string ReturnUrl { get; set; }
+}
 }

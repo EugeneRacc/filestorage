@@ -4,6 +4,7 @@ using Business.Interfaces;
 using Business.Services;
 using Data.Data;
 using Data.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApi;
@@ -38,13 +39,24 @@ public class Startup
                     policy.AllowAnyOrigin();
                 });
             });
+            services.AddAuthentication(config =>
+            {
+                config.DefaultAuthenticateScheme =
+                    JwtBearerDefaults.AuthenticationScheme;
+                config.DefaultChallengeScheme =
+                    JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:7187/";
+                    options.Audience = "FileStorageWebAPI";
+                    options.RequireHttpsMetadata = false;
+                    
+                });
             services.AddSingleton(mapper);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IFileService, FileService>();
-
-
-            
             services.AddControllers();
         }
 
@@ -61,6 +73,8 @@ public class Startup
             app.UseRouting();
 
             app.UseCors("AllowAll");
+
+            app.UseAuthentication();
             
             app.UseAuthorization();
 

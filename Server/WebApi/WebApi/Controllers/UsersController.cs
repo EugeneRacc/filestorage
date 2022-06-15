@@ -4,6 +4,7 @@ using Business.Models;
 using Business.Services;
 using Data.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers;
 
@@ -18,6 +19,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<UserModel>>> Get()
     {
         IEnumerable<UserModel> customers;

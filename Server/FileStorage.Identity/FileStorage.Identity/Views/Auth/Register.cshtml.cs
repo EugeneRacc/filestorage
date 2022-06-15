@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FileStorage.Identity.Views
+namespace FileStorage.Identity.Views.Auth
 {
-    public class _ViewImports : PageModel
+    public class Register : PageModel
     {
         public void OnGet()
         {

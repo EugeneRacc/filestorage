@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace FileStorage.Identity.Models;
-
-public class AppUser : IdentityUser
+namespace FileStorage.Identity.Models
 {
-    public string Name { get; set; }
-    public string LastName { get; set; }
+    public class AppUser : IdentityUser
+    {
+        public string Name { get; set; }
+        public string LastName { get; set; }
+    }
 }

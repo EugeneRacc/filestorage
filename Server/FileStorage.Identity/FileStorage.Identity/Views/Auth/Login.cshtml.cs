@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FileStorage.Identity.Views.Auth;
-
-public class Login : PageModel
+namespace FileStorage.Identity.Views.Auth
 {
-    public void OnGet()
+    public class Login : PageModel
     {
-        
+        public void OnGet()
+        {
+
+        }
     }
 }
