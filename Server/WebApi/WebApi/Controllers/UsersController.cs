@@ -12,8 +12,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace WebApi.Controllers
 {
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
+    //[ApiVersionNeutral]
     [Produces("application/json")]
-    [Route("filestorage/[controller]")]
+    [Route("api/{version:apiVersion}/[controller]")]
+    //[Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -27,7 +31,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <remarks>
         /// Sample request:
-        /// GET /filestorage/users
+        /// GET /api/{version}/users
         /// </remarks>
         /// <returns>Returns UserModel</returns>
         /// <response code="200">Success</response>
