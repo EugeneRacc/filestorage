@@ -4,47 +4,51 @@ using Business.Models;
 using Business.Services;
 using Data.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
-namespace WebApi.Controllers;
-
-[Route("filestorage/")]
-[ApiController]
-public class AuthenticationController : ControllerBase
+namespace WebApi.Controllers
 {
-    private readonly IUserService _userService;
-    public AuthenticationController(IUnitOfWork uow, IMapper mapper)
+
+    [Route("filestorage/")]
+    [ApiController]
+    public class AuthenticationController : ControllerBase
     {
-        _userService = new UserService(uow, mapper);
-    }
-    
-    [HttpPost("register")]
-    public async Task<ActionResult> Add([FromBody] UserModel value)
-    {
-        try
+        private readonly IUserService _userService;
+        public AuthenticationController(IUnitOfWork uow, IMapper mapper)
         {
-            await _userService.AddAsync(value);
+            _userService = new UserService(uow, mapper);
         }
-        catch(Exception)
+
+        [HttpPost("register")]
+        public async Task<ActionResult> Add([FromBody] UserModel value)
         {
-            return BadRequest(StatusCode(400));
+            try
+            {
+                await _userService.AddAsync(value);
+            }
+            catch (Exception)
+            {
+                return BadRequest(StatusCode(400));
+            }
+            return CreatedAtAction(nameof(Add), value);
         }
-        return CreatedAtAction(nameof(Add), value);
-    }
-    
-    [HttpPost("login")]
-    public async Task<ActionResult> LogIn([FromBody] UserModel value)
-    {
-        bool result = false;
-        try
-        { 
-            result = await _userService.LogInAsync(value);
-        }
-        catch(Exception)
+
+        [HttpPost("login")]
+        public async Task<ActionResult> LogIn([FromBody] UserModel value)
         {
-            return BadRequest(StatusCode(400));
+            bool result = false;
+            try
+            {
+                result = await _userService.LogInAsync(value);
+            }
+            catch (Exception)
+            {
+                return BadRequest(StatusCode(400));
+            }
+            return CreatedAtAction(nameof(LogIn), result);
         }
-        return CreatedAtAction(nameof(LogIn), result);
-    }
 
 
+    }
 }

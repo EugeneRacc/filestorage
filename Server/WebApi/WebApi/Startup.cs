@@ -5,13 +5,22 @@ using Business.Services;
 using Data.Data;
 using Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
+using System.Reflection;
 
-namespace WebApi;
-
-public class Startup
+namespace WebApi
 {
-   
+
+    public class Startup
+    {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -51,8 +60,16 @@ public class Startup
                     options.Authority = "https://localhost:7187/";
                     options.Audience = "FileStorageWebAPI";
                     options.RequireHttpsMetadata = false;
-                    
+
                 });
+
+            services.AddSwaggerGen(config =>
+            {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                config.IncludeXmlComments(xmlPath);
+
+            });
             services.AddSingleton(mapper);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
@@ -67,7 +84,12 @@ public class Startup
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseSwagger();
+            app.UseSwaggerUI(config =>
+            {
+                config.RoutePrefix = string.Empty;
+                config.SwaggerEndpoint("swagger/v1/swagger.json", "FileStorage API");
+            });
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -75,11 +97,12 @@ public class Startup
             app.UseCors("AllowAll");
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-        
+
         }
     }
 
+}

@@ -1,6 +1,8 @@
-namespace Business.Models;
-
-public class FileModel
+namespace Business.Models
 {
-    //TODO add business logic to FileModel
+
+    public class FileModel
+    {
+        //TODO add business logic to FileModel
+    }
 }
