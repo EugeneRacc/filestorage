@@ -10,7 +10,8 @@ namespace FileStorage.Identity
         public static IEnumerable<ApiScope> ApiScopes =>
             new List<ApiScope>
             {
-                new ApiScope("FileStorageWebApi", "Web API")
+                //new ApiScope("FileStorageWebApi", "Web API")
+                new ApiScope(IdentityServerConstants.LocalApi.ScopeName )
             };
 
         public static IEnumerable<IdentityResource> IdentityResources =>
@@ -44,15 +45,15 @@ namespace FileStorage.Identity
                     RequirePkce = true,
                     RedirectUris =
                     {
-                        "http://.../signin-oidc"
+                        "http://localhost:3000/signin-oidc"
                     },
                     AllowedCorsOrigins =
                     {
-                        "http://..."
+                        "http://localhost:3000"
                     },
                     PostLogoutRedirectUris =
                     {
-                        "http:/.../signout-oidc"
+                        "http://localhost:3000/signout-oidc"
                     },
                     AllowedScopes =
                     {

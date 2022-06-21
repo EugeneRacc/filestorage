@@ -1,14 +1,18 @@
-namespace Business.Exceptions;
+using System;
 
-[Serializable]
-public class FileStorageException : Exception
+namespace Business.Exceptions
 {
-    public FileStorageException() { }
 
-    public FileStorageException(string name)
-        : base(name)
+    [Serializable]
+    public class FileStorageException : Exception
     {
+        public FileStorageException() { }
+
+        public FileStorageException(string name)
+            : base(name)
+        {
+
+        }
 
     }
-
 }

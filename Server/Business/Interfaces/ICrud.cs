@@ -1,15 +1,20 @@
-namespace Business.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-public interface ICrud<TModel> where TModel : class
+namespace Business.Interfaces
 {
-    Task<IEnumerable<TModel>> GetAllAsync();
 
-    Task<TModel> GetByIdAsync(int id);
+    public interface ICrud<TModel> where TModel : class
+    {
+        Task<IEnumerable<TModel>> GetAllAsync();
 
-    Task AddAsync(TModel model);
+        Task<TModel> GetByIdAsync(int id);
 
-    Task UpdateAsync(TModel model);
+        Task AddAsync(TModel model);
 
-    Task DeleteAsync(int modelId);
+        Task UpdateAsync(TModel model);
 
+        Task DeleteAsync(int modelId);
+
+    }
 }

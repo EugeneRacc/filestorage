@@ -5,13 +5,27 @@ using Business.Services;
 using Data.Data;
 using Data.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
-namespace WebApi;
-
-public class Startup
+namespace WebApi
 {
-   
+
+    public class Startup
+    {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -39,7 +53,21 @@ public class Startup
                     policy.AllowAnyOrigin();
                 });
             });
-            services.AddAuthentication(config =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration ["Jwt:Key"]))
+                    };
+                });
+            /*services.AddAuthentication(config =>
             {
                 config.DefaultAuthenticateScheme =
                     JwtBearerDefaults.AuthenticationScheme;
@@ -51,8 +79,20 @@ public class Startup
                     options.Authority = "https://localhost:7187/";
                     options.Audience = "FileStorageWebAPI";
                     options.RequireHttpsMetadata = false;
-                    
+
                 });
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication("Bearer", options =>
+                {
+                    options.ApiName = "weatherapi";
+                    options.Authority = "https://localhost:5443";
+                });*/
+            services.AddVersionedApiExplorer(options => 
+                options.GroupNameFormat = "'v'VVV");
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>,
+                ConfigureSwaggerOptions>();
+            services.AddSwaggerGen();
+            services.AddApiVersioning();
             services.AddSingleton(mapper);
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
@@ -61,13 +101,24 @@ public class Startup
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, 
+            IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseSwagger();
+            app.UseSwaggerUI(config =>
+            {
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    config.SwaggerEndpoint(
+                        $"/swagger/{description.GroupName}/swagger.json",
+                        description.GroupName.ToUpperInvariant());
+                    config.RoutePrefix = string.Empty;
+                }
+            });
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -75,11 +126,14 @@ public class Startup
             app.UseCors("AllowAll");
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
+            app.UseApiVersioning();
+            
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-        
+
         }
     }
 
+}

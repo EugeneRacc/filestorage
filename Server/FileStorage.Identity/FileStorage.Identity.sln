@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileStorage.Identity", "FileStorage.Identity\FileStorage.Identity.csproj", "{B1F3773E-CBD1-4AE0-9C47-D2DECE39AE92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "File.Identity", "File.Identity\File.Identity.csproj", "{FC70B50A-FBDC-4A42-A40E-0F80F46B6151}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{B1F3773E-CBD1-4AE0-9C47-D2DECE39AE92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1F3773E-CBD1-4AE0-9C47-D2DECE39AE92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1F3773E-CBD1-4AE0-9C47-D2DECE39AE92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC70B50A-FBDC-4A42-A40E-0F80F46B6151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC70B50A-FBDC-4A42-A40E-0F80F46B6151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC70B50A-FBDC-4A42-A40E-0F80F46B6151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC70B50A-FBDC-4A42-A40E-0F80F46B6151}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
