@@ -17,6 +17,8 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace WebApi
 {
@@ -51,7 +53,21 @@ namespace WebApi
                     policy.AllowAnyOrigin();
                 });
             });
-            services.AddAuthentication(config =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration ["Jwt:Key"]))
+                    };
+                });
+            /*services.AddAuthentication(config =>
             {
                 config.DefaultAuthenticateScheme =
                     JwtBearerDefaults.AuthenticationScheme;
@@ -65,6 +81,12 @@ namespace WebApi
                     options.RequireHttpsMetadata = false;
 
                 });
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication("Bearer", options =>
+                {
+                    options.ApiName = "weatherapi";
+                    options.Authority = "https://localhost:5443";
+                });*/
             services.AddVersionedApiExplorer(options => 
                 options.GroupNameFormat = "'v'VVV");
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>,

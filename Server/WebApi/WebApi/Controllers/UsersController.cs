@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using System.Linq;
 
 namespace WebApi.Controllers
 {
@@ -37,10 +39,9 @@ namespace WebApi.Controllers
         /// <response code="200">Success</response>
         /// <response code="401">If the user is unauthorized</response>
         [HttpGet]
-        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-
+            
         public async Task<ActionResult<IEnumerable<UserModel>>> Get()
         {
             IEnumerable<UserModel> customers;
@@ -53,6 +54,28 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
             return Ok(customers);
+        }
+        [HttpGet("Admins")]
+        [Authorize(Roles = "Admin")]
+        public ActionResult AdminEndpoint()
+        {
+            var currentUser = GetCurrentUser();
+            return Ok($"Hi {currentUser.Email}, you are an {currentUser.RoleId}");
+        }
+
+        private UserModel GetCurrentUser()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if(identity != null)
+            {
+                var userClaims = identity.Claims;
+                return new UserModel
+                {
+                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
+                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
+                };
+            }
+            return null;
         }
 
         [HttpGet("{id}")]

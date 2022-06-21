@@ -36,7 +36,13 @@ namespace Business.Services
             return mappedCustomer;
         }
 
-
+        public async Task<UserModel> GetByUserCredentials(UserLogin userLogin)
+        {
+            var user = (await db.UserRepository.GetAllWithDetailsAsync()).FirstOrDefault(u =>
+            u.Email.ToLower() == userLogin.Email.ToLower() && u.Password == userLogin.Password);
+            var mappedUser = mapper.Map<UserModel>(user);
+            return mappedUser;
+        }
         public async Task AddAsync(UserModel model)
         {
             if (model == null)

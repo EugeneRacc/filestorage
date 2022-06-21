@@ -3,20 +3,28 @@ using Business.Interfaces;
 using Business.Models;
 using Business.Services;
 using Data.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
 
-    [Route("filestorage/")]
+    [Route("api/{version:apiVersion}")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+        private IConfiguration _configuration;
         private readonly IUserService _userService;
-        public AuthenticationController(IUnitOfWork uow, IMapper mapper)
+        public AuthenticationController(IUnitOfWork uow, IMapper mapper, IConfiguration config)
         {
+            _configuration = config;
             _userService = new UserService(uow, mapper);
         }
 
@@ -34,21 +42,44 @@ namespace WebApi.Controllers
             return CreatedAtAction(nameof(Add), value);
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult> LogIn([FromBody] UserModel value)
+        public async Task<ActionResult> LogIn([FromBody] UserLogin value)
         {
-            bool result = false;
-            try
+            var user = Authenticate(value);
+            if(user != null)
             {
-                result = await _userService.LogInAsync(value);
+                var token = Generate(user.Result);
+                return Ok(token);
             }
-            catch (Exception)
-            {
-                return BadRequest(StatusCode(400));
-            }
-            return CreatedAtAction(nameof(LogIn), result);
+            return NotFound("User not found");
         }
 
+        private string Generate(UserModel user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role = user.RoleId == 1 ? "Admin" : "User")
+            };
+            var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(15),
+                signingCredentials: credentials);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
 
+        private async Task<UserModel> Authenticate(UserLogin value)
+        {
+            var currentUser = await _userService.GetByUserCredentials(value);
+            if(currentUser != null)
+            {
+                return currentUser;
+            }
+            return null;
+        }
     }
 }

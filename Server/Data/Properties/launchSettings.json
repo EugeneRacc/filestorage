@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Data": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
