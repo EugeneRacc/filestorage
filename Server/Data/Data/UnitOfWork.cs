@@ -18,6 +18,8 @@ namespace Data.Data
         public UnitOfWork(FileStorageDbContext fileStorageDbContext)
         {
             _fileStorageDbContext = fileStorageDbContext;
+            _roleRepository = new RoleRepository(_fileStorageDbContext);
+
         }
 
         public IDiskSpaceRepository DiskSpaceRepository

@@ -2,6 +2,7 @@ using AutoMapper;
 using Business.Interfaces;
 using Business.Models;
 using Business.Services;
+using Data.Entities;
 using Data.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,11 +32,12 @@ namespace WebApi.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Add([FromBody] UserModel value)
         {
+           
             try
             {
                 await _userService.AddAsync(value);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return BadRequest(StatusCode(400));
             }
@@ -62,7 +64,7 @@ namespace WebApi.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role = user.RoleId == 1 ? "Admin" : "User")
+                new Claim(ClaimTypes.Role, user.RoleName)
             };
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],

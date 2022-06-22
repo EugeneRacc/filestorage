@@ -15,10 +15,10 @@ namespace Data.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                @"Server=localhost,1433;Database=ms-sql-server;User=sa;Password=Docker@123;");
-                //@"Server=.;Database=FileStorage;Trusted_Connection=True;");
-        }
-        */
+                //@"Server=localhost,1433;Database=ms-sql-server;User=sa;Password=Docker@123;");
+                @"Server=.;Database=FileStorage;Trusted_Connection=True;");
+        }*/
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()

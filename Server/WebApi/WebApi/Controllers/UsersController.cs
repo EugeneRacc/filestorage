@@ -60,7 +60,7 @@ namespace WebApi.Controllers
         public ActionResult AdminEndpoint()
         {
             var currentUser = GetCurrentUser();
-            return Ok($"Hi {currentUser.Email}, you are an {currentUser.RoleId}");
+            return Ok($"Hi {currentUser.Email}, you are an {currentUser.RoleName}");
         }
 
         private UserModel GetCurrentUser()
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
                 return new UserModel
                 {
                     Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
-                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
+                    RoleName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
                 };
             }
             return null;
