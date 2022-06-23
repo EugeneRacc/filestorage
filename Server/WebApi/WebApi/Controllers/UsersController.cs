@@ -56,7 +56,7 @@ namespace WebApi.Controllers
             return Ok(customers);
         }
         [HttpGet("Admins")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "User")]
         public ActionResult AdminEndpoint()
         {
             var currentUser = GetCurrentUser();

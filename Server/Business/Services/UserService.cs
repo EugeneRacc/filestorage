@@ -38,6 +38,7 @@ namespace Business.Services
 
         public async Task<UserModel> GetByUserCredentials(UserLogin userLogin)
         {
+            userLogin.Password = MD5Hash.GetMD5Hash(userLogin.Password);
             var user = (await db.UserRepository.GetAllWithDetailsAsync()).FirstOrDefault(u =>
             u.Email.ToLower() == userLogin.Email.ToLower() && u.Password == userLogin.Password);
             var mappedUser = mapper.Map<UserModel>(user);

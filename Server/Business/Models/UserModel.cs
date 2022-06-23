@@ -12,8 +12,8 @@ namespace Business.Models
         public int Id { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string RoleName { get; set; }
-        public string UsedDiskSpace { get; set; }
+        public string RoleName { get; set; } = "User";
+        public string? UsedDiskSpace { get; set; }
         public ICollection<int>? FilesIds { get; set; }
     }
 }
