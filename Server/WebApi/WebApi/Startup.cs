@@ -130,7 +130,8 @@ namespace WebApi
             app.UseAuthorization();
 
             app.UseApiVersioning();
-            
+
+
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
         }

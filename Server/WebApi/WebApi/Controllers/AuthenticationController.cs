@@ -5,11 +5,13 @@ using Business.Services;
 using Data.Entities;
 using Data.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +34,6 @@ namespace WebApi.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Add([FromBody] UserModel value)
         {
-           
             try
             {
                 await _userService.AddAsync(value);
@@ -48,15 +49,36 @@ namespace WebApi.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> LogIn([FromBody] UserLogin value)
         {
-            var user = Authenticate(value);
+            var user = Authenticate(value); 
             if(user != null)
             {
                 var token = Generate(user.Result);
-                return Ok(token);
+                user.Result.Password = null;
+                return Ok(new { token, user = user.Result });
             }
             return NotFound("User not found");
         }
-
+        [AllowAnonymous]
+        [HttpGet("auth")]
+        public async Task<ActionResult> LogInByToken() 
+        {
+            var handler = new JwtSecurityTokenHandler();
+            string authHeader = Request.Headers["Authorization"];
+            authHeader = authHeader.Replace("Bearer ", "");
+            var jsonToken = handler.ReadToken(authHeader);
+            var tokenS = handler.ReadToken(authHeader) as JwtSecurityToken;
+           
+            var id = tokenS.Claims.First(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
+            var user = _userService.GetByIdAsync(int.Parse(id));
+            if (user != null)
+            {
+                var token = Generate(user.Result);
+                user.Result.Password = null;
+                
+                return Ok(new { token, user = user.Result });
+            }
+            return NotFound("User not found");
+        }
         private string Generate(UserModel user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
