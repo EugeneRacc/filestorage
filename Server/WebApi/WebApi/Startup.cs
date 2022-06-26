@@ -19,6 +19,7 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Data.Repositories;
 
 namespace WebApi
 {
@@ -97,6 +98,7 @@ namespace WebApi
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IFileRepository, FileRepository>();
             services.AddControllers();
         }
 

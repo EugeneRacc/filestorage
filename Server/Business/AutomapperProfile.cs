@@ -18,8 +18,8 @@ namespace Business
                     => u.MapFrom(src => src.Files.Select(x => x.Id)))
                 .ReverseMap();
             CreateMap<Data.Entities.File, FileModel>()
-                .ReverseMap();
-            CreateMap<File, FileModel>()
+                .ForMember(um => um.ChildFileIds, u
+                    => u.MapFrom(src => src.ChildFiles.Select(x => x.Id)))
                 .ReverseMap();
             /*CreateMap<UserModel, User>()
                 .ForMember(ur => ur.RoleId, u =>

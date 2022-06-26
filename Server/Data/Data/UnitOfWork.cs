@@ -10,7 +10,6 @@ namespace Data.Data
     {
         private readonly FileStorageDbContext _fileStorageDbContext;
         private IDiskSpaceRepository _diskSpaceRepository;
-        private IFileMetaRepository _fileMetaRepository;
         private IFileRepository _fileRepository;
         private IRoleRepository _roleRepository;
         private IUserRepository _userRepository;
@@ -29,16 +28,6 @@ namespace Data.Data
                 if (_diskSpaceRepository == null)
                     _diskSpaceRepository = new DiskSpaceRepository(_fileStorageDbContext);
                 return _diskSpaceRepository;
-            }
-        }
-
-        public IFileMetaRepository FileMetaRepository
-        {
-            get
-            {
-                if (_fileMetaRepository == null)
-                    _fileMetaRepository = new FileMetaRepository(_fileStorageDbContext);
-                return _fileMetaRepository;
             }
         }
 

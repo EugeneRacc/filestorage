@@ -6,7 +6,10 @@ using Business.PasswordHash;
 using Data.Entities;
 using Data.Interfaces;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Business.Services
@@ -36,6 +39,13 @@ namespace Business.Services
             var file = await _db.FileRepository.GetByIdAsync(id);
             var mappedfile = _mapper.Map<Data.Entities.File, FileModel>(file);
             return mappedfile;
+        }
+        public async Task<FileModel> GetByModelAsync(FileModel model)
+        {
+            var files = await GetAllAsync();
+            var result = files.FirstOrDefault(x => x.Name == model.Name && x.UserId == model.UserId && x.Type == model.Type 
+            && x.ParentId == model.ParentId && x.Path == model.Path);
+            return result;
         }
 
         public async Task AddAsync(FileModel model)
@@ -80,23 +90,32 @@ namespace Business.Services
             }
             else
             {
-                model.Path = @$"{parentFile.Path}\\{model.Name}";
-                CreateDirWithAllInfo(model);
-                var mappedParentFile = _mapper.Map<File, FileModel>(parentFile);
-                var mappedFile = _mapper.Map<FileModel, File>(model);
-                parentFile.ChildFiles.Add(mappedFile);
-                await UpdateAsync(mappedParentFile);
+                model.Path = @$"{parentFile.Path}\{model.Name}";
+                try
+                {
+                    CreateDirWithAllInfo(model);
+                    
+                }
+                catch (Exception)
+                {
+                    throw new FileStorageException($"File already exist {model.Name}");
+                }
                 await AddAsync(model);
                 await _db.SaveAsync();
-                
+                /*var mappedParentFile = _mapper.Map<File, FileModel>(parentFile);
+                mappedParentFile.ChildFileIds = new Collection<int>();
+                mappedParentFile.ChildFileIds.Add(model.Id);
+                await UpdateAsync(mappedParentFile);
+                await _db.SaveAsync();*/
+
             }
             
         }
 
         public void CreateDirWithAllInfo(FileModel file)
         {
-            var filePath = $"{_configuration["FilePath"]}\\\\{file.UserId}\\\\{file.Path}";
-            if (!System.IO.File.Exists(filePath))
+            var filePath = $"{_configuration["FilePath"]}\\{file.UserId}\\{file.Path}";
+            if (!System.IO.Directory.Exists(filePath))
             {
                 System.IO.Directory.CreateDirectory(filePath);
             }
@@ -106,6 +125,16 @@ namespace Business.Services
             }
         }
 
-        
+        public async Task<IEnumerable<FileModel>> GetFilesByParentIdAsync(int userId, int? parentId)
+        {
+            return (await GetAllAsync())
+                .Where(x => x.UserId == userId && x.ParentId == parentId);
+        }
+
+        public async Task<IEnumerable<FileModel>> GetFilesByUserIdAsync(int userId)
+        {
+            return (await GetAllAsync())
+                .Where(x => x.UserId == userId);
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Data.Entities
     {
         public string Name { get; set; }
         public string Type { get; set; }
-        public string AccessLink { get; set; }
+        public string? AccessLink { get; set; }
         public string Size { get; set; }
         public string Path { get; set; }
         public int UserId { get; set; }

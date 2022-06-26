@@ -50,7 +50,7 @@ namespace Data.Repositories
             }
             else
             {
-                throw new NullReferenceException($"Entity with such an id isn't exist {nameof(entity)}");
+                throw new ArgumentNullException($"Entity with such an id isn't exist {nameof(entity)}");
             }
         }
 

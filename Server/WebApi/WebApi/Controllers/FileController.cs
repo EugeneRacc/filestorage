@@ -36,11 +36,29 @@ namespace WebApi.Controllers
                 model.UserId = user.Result;
                 await _fileService.CreateDir(model);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
             return Ok();
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetFiles(string id)
+        {
+            IEnumerable<FileModel> resultFiles;
+            try
+            {
+                string authHeader = Request.Headers["Authorization"];
+                var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
+                resultFiles = await _fileService.GetFilesByParentIdAsync(user.Result, int.Parse(id));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            return Ok(resultFiles);
         }
     }
 }
