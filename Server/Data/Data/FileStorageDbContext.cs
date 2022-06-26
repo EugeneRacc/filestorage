@@ -42,6 +42,14 @@ namespace Data.Data
             modelBuilder.Entity<File>()
                 .HasOne(f => f.FileMeta)
                 .WithOne(fm => fm.File);
+            modelBuilder.Entity<File>()
+                .HasOne(e => e.FileFolder)
+                .WithMany()
+                .HasForeignKey(p => p.ParentId);
+            modelBuilder.Entity<File>()
+                .HasMany(e => e.ChildFiles)
+                .WithOne()
+                .HasForeignKey(c => c.ChildId);
         }
         public DbSet<File> Files { get; set; }
         public DbSet<FileMeta> FileMetas { get; set; }

@@ -11,6 +11,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace WebApi.Controllers
 {
@@ -24,9 +25,9 @@ namespace WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UsersController(IUnitOfWork uow, IMapper mapper)
+        public UsersController(IUnitOfWork uow, IMapper mapper, IConfiguration configuration)
         {
-            _userService = new UserService(uow, mapper);
+            _userService = new UserService(uow, mapper, configuration);
         }
         /// <summary>
         /// Gets all UserModels.

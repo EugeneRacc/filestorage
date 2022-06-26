@@ -5,6 +5,7 @@ using Business.Models;
 using Business.PasswordHash;
 using Data.Entities;
 using Data.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,12 @@ namespace Business.Services
     {
         private readonly IUnitOfWork db;
         private readonly IMapper mapper;
-        public UserService(IUnitOfWork uow, IMapper mapper)
+        private readonly IConfiguration configuration;
+        public UserService(IUnitOfWork uow, IMapper mapper, IConfiguration configuration)
         {
             db = uow;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
         public async Task<IEnumerable<UserModel>> GetAllAsync()
         {
@@ -64,10 +67,13 @@ namespace Business.Services
             }
             model.Password = MD5Hash.GetMD5Hash(model.Password);
             var customer = mapper.Map<UserModel, User>(model);
+            int id = customer.Id;
             if (customer == null)
                 return;
             await db.UserRepository.AddAsync(customer);
             await db.SaveAsync();
+            new FileService(db, mapper, configuration).CreateDirWithAllInfo(
+                new FileModel { UserId = id, Name = $"{id}" });
         }
 
         public async Task UpdateAsync(UserModel model)

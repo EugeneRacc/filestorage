@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using Data.Enum;
 
 namespace Data.Entities
@@ -11,4 +11,4 @@ namespace Data.Entities
         public ModificationType ModificationType { get; set; }
         public File File { get; set; }
     }
-}
+}*/

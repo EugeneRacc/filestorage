@@ -28,7 +28,7 @@ namespace WebApi.Controllers
         public AuthenticationController(IUnitOfWork uow, IMapper mapper, IConfiguration config)
         {
             _configuration = config;
-            _userService = new UserService(uow, mapper);
+            _userService = new UserService(uow, mapper, config);
         }
 
         [HttpPost("register")]
@@ -62,14 +62,8 @@ namespace WebApi.Controllers
         [HttpGet("auth")]
         public async Task<ActionResult> LogInByToken() 
         {
-            var handler = new JwtSecurityTokenHandler();
             string authHeader = Request.Headers["Authorization"];
-            authHeader = authHeader.Replace("Bearer ", "");
-            var jsonToken = handler.ReadToken(authHeader);
-            var tokenS = handler.ReadToken(authHeader) as JwtSecurityToken;
-           
-            var id = tokenS.Claims.First(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").Value;
-            var user = _userService.GetByIdAsync(int.Parse(id));
+            var user = new AuthenticationService(_userService).GetUserByToken(authHeader);
             if (user != null)
             {
                 var token = Generate(user.Result);

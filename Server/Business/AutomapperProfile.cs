@@ -19,7 +19,8 @@ namespace Business
                 .ReverseMap();
             CreateMap<Data.Entities.File, FileModel>()
                 .ReverseMap();
-
+            CreateMap<File, FileModel>()
+                .ReverseMap();
             /*CreateMap<UserModel, User>()
                 .ForMember(ur => ur.RoleId, u =>
                 u.MapFrom(src => src.Role == "Admin" ? 1 : 2))

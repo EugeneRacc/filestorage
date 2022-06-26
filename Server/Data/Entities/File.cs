@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace Data.Entities
@@ -10,9 +11,12 @@ namespace Data.Entities
         public string Size { get; set; }
         public string Path { get; set; }
         public int UserId { get; set; }
-        public int ParentId { get; set; }
-        public int FileMetaId { get; set; }
+        public int? ParentId { get; set; }
+        public int? ChildId { get; set; }
+        //public int FileMetaId { get; set; }
         public User User { get; set; }
-        public FileMeta FileMeta { get; set; }
+        public File FileFolder { get; set; }
+        public ICollection<File> ChildFiles { get; set; }
+        //public FileMeta FileMeta { get; set; }
     }
 }
