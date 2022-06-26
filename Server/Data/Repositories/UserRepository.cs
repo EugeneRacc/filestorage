@@ -64,7 +64,6 @@ namespace Data.Repositories
         {
             var result = await _fileStorageDbContext.Users
                 .Include(f => f.Files)
-                .ThenInclude(fm => fm.FileMeta)
                 .Include(ds => ds.DiskSpace)
                 .Include(r => r.Role)
                 .ToListAsync();
@@ -75,7 +74,6 @@ namespace Data.Repositories
         {
             var result = await _fileStorageDbContext.Users
                 .Include(f => f.Files)
-                .ThenInclude(fm => fm.FileMeta)
                 .Include(ds => ds.DiskSpace)
                 .Include(r => r.Role)
                 .FirstOrDefaultAsync(u => u.Id == id);

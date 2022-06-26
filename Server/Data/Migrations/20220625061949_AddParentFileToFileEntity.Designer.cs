@@ -4,6 +4,7 @@ using Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(FileStorageDbContext))]
-    partial class FileStorageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220625061949_AddParentFileToFileEntity")]
+    partial class AddParentFileToFileEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,9 +50,13 @@ namespace Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AccessLink")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ChildId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FileMetaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -66,9 +72,7 @@ namespace Data.Migrations
 
                     b.Property<string>("Size")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("0");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -81,11 +85,36 @@ namespace Data.Migrations
 
                     b.HasIndex("ChildId");
 
+                    b.HasIndex("FileMetaId")
+                        .IsUnique();
+
                     b.HasIndex("ParentId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("Data.Entities.FileMeta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Creation")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModificationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Modify")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FileMetas");
                 });
 
             modelBuilder.Entity("Data.Entities.Role", b =>
@@ -156,6 +185,12 @@ namespace Data.Migrations
                         .WithMany("ChildFiles")
                         .HasForeignKey("ChildId");
 
+                    b.HasOne("Data.Entities.FileMeta", "FileMeta")
+                        .WithOne("File")
+                        .HasForeignKey("Data.Entities.File", "FileMetaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Data.Entities.File", "FileFolder")
                         .WithMany()
                         .HasForeignKey("ParentId");
@@ -167,6 +202,8 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("FileFolder");
+
+                    b.Navigation("FileMeta");
 
                     b.Navigation("User");
                 });
@@ -198,6 +235,12 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.File", b =>
                 {
                     b.Navigation("ChildFiles");
+                });
+
+            modelBuilder.Entity("Data.Entities.FileMeta", b =>
+                {
+                    b.Navigation("File")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Data.Entities.Role", b =>

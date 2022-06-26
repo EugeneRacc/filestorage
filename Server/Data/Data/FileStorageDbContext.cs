@@ -40,11 +40,18 @@ namespace Data.Data
                 .HasMany(u => u.Files)
                 .WithOne(f => f.User);
             modelBuilder.Entity<File>()
-                .HasOne(f => f.FileMeta)
-                .WithOne(fm => fm.File);
+                .Property(u => u.Size)
+                .HasDefaultValue("0");
+            modelBuilder.Entity<File>()
+                .HasOne(e => e.FileFolder)
+                .WithMany()
+                .HasForeignKey(p => p.ParentId);
+            modelBuilder.Entity<File>()
+                .HasMany(e => e.ChildFiles)
+                .WithOne()
+                .HasForeignKey(c => c.ChildId);
         }
         public DbSet<File> Files { get; set; }
-        public DbSet<FileMeta> FileMetas { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<DiskSpace> UserDiskSpaces { get; set; }
