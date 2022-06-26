@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
-    [Route("api/{version:apiVersion}")]
+    [Route("api/{version:apiVersion}/[controller]")]
     [ApiController]
     public class FileController : ControllerBase
     {

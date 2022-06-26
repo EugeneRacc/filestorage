@@ -29,7 +29,7 @@ namespace Business.Services
 
         public async Task<IEnumerable<FileModel>> GetAllAsync()
         {
-            var files = await _db.FileRepository.GetAllAsync();
+            var files = await _db.FileRepository.GetAllWithDetailsAsync();
             var mappedfiles = _mapper.Map<IEnumerable<Data.Entities.File>, IEnumerable<FileModel>>(files);
             return mappedfiles;
         }

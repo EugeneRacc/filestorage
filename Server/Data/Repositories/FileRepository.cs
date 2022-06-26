@@ -29,7 +29,14 @@ namespace Data.Repositories
             var file = await _fileStorageDbContext.Set<File>().FindAsync(id);
             return file;
         }
-
+        public async Task<IEnumerable<File>> GetAllWithDetailsAsync()
+        {
+            var result = await _fileStorageDbContext.Files
+                .Include(f => f.ChildFiles)
+                .Include(f => f.FileFolder)
+                .ToListAsync();
+            return result;
+        }
         public async Task AddAsync(File entity)
         {
             await _fileStorageDbContext.Set<File>().AddAsync(entity);

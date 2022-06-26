@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Numerics;
 
 namespace Data.Entities
@@ -17,6 +18,7 @@ namespace Data.Entities
         public User User { get; set; }
         public File FileFolder { get; set; }
         public ICollection<File> ChildFiles { get; set; }
+        
         //public FileMeta FileMeta { get; set; }
     }
 }

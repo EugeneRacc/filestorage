@@ -4,6 +4,7 @@ using Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(FileStorageDbContext))]
-    partial class FileStorageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220626174508_ChangeFileForeignKeys")]
+    partial class ChangeFileForeignKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,7 +81,7 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("ChildId");
 
                     b.HasIndex("UserId");
 
@@ -152,7 +154,7 @@ namespace Data.Migrations
                 {
                     b.HasOne("Data.Entities.File", "FileFolder")
                         .WithMany("ChildFiles")
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ChildId");
 
                     b.HasOne("Data.Entities.User", "User")
                         .WithMany("Files")
