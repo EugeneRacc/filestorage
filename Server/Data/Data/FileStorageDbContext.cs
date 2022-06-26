@@ -42,14 +42,14 @@ namespace Data.Data
             modelBuilder.Entity<File>()
                 .Property(u => u.Size)
                 .HasDefaultValue("0");
-            modelBuilder.Entity<File>()
-                .HasOne(e => e.FileFolder)
-                .WithMany()
-                .HasForeignKey(p => p.ParentId);
+            //modelBuilder.Entity<File>()
+              //  .HasOne(e => e.FileFolder)
+               // .WithMany()
+              //  .HasForeignKey(p => p.ChildId);
             modelBuilder.Entity<File>()
                 .HasMany(e => e.ChildFiles)
-                .WithOne()
-                .HasForeignKey(c => c.ChildId);
+                .WithOne(x => x.FileFolder)
+                .HasForeignKey(e => e.ParentId);
         }
         public DbSet<File> Files { get; set; }
         public DbSet<Role> Roles { get; set; }

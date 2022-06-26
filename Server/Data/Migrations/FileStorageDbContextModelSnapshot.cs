@@ -79,8 +79,6 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChildId");
-
                     b.HasIndex("ParentId");
 
                     b.HasIndex("UserId");
@@ -152,12 +150,8 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.File", b =>
                 {
-                    b.HasOne("Data.Entities.File", null)
-                        .WithMany("ChildFiles")
-                        .HasForeignKey("ChildId");
-
                     b.HasOne("Data.Entities.File", "FileFolder")
-                        .WithMany()
+                        .WithMany("ChildFiles")
                         .HasForeignKey("ParentId");
 
                     b.HasOne("Data.Entities.User", "User")

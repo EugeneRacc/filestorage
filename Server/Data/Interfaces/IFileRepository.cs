@@ -6,5 +6,6 @@ namespace Data.Interfaces
 {
     public interface IFileRepository : IRepository<File>
     {
+        public Task<IEnumerable<File>> GetAllWithDetailsAsync();
     }
 }
