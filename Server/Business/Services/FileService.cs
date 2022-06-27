@@ -76,7 +76,7 @@ namespace Business.Services
 
         }
 
-        public async Task CreateDir(FileModel model)
+        public async Task<FileModel> CreateDir(FileModel model)
         {
             File parentFile = null;
             if (model.ParentId != null) {
@@ -87,6 +87,15 @@ namespace Business.Services
                 model.Path = model.Name;
                 await AddAsync(model);
                 CreateDirWithAllInfo(model);
+                try
+                {
+                    return await GetByModelAsync(model);
+                }
+                catch (Exception)
+                {
+
+                    throw new FileStorageException($"File not created {model.Name}");
+                }
             }
             else
             {
@@ -102,6 +111,15 @@ namespace Business.Services
                 }
                 await AddAsync(model);
                 await _db.SaveAsync();
+                try
+                {
+                    return await GetByModelAsync(model);
+                }
+                catch (Exception)
+                {
+
+                    throw new FileStorageException($"File not created {model.Name}");
+                }
                 /*var mappedParentFile = _mapper.Map<File, FileModel>(parentFile);
                 mappedParentFile.ChildFileIds = new Collection<int>();
                 mappedParentFile.ChildFileIds.Add(model.Id);

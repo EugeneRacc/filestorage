@@ -29,18 +29,19 @@ namespace WebApi.Controllers
         [Authorize]
         public async Task<IActionResult> CreateDirectory([FromBody] FileModel model)
         {
+            FileModel result;
             try
             {
                 string authHeader = Request.Headers["Authorization"];
                 var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
                 model.UserId = user.Result;
-                await _fileService.CreateDir(model);
+                result = await _fileService.CreateDir(model);
             }
             catch (Exception e)
             {
                 return BadRequest(e);
             }
-            return Ok();
+            return Ok(result);
         }
 
         [HttpGet]
@@ -63,7 +64,7 @@ namespace WebApi.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetFilesWithParentId([FromQuery] string id)
+        public async Task<IActionResult> GetFilesWithParentId(string id)
         {
             IEnumerable<FileModel> resultFiles;
             try
