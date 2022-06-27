@@ -134,7 +134,7 @@ namespace Business.Services
         public async Task<IEnumerable<FileModel>> GetFilesByUserIdAsync(int userId)
         {
             return (await GetAllAsync())
-                .Where(x => x.UserId == userId);
+                .Where(x => x.UserId == userId && x.ParentId == null);
         }
     }
 }

@@ -43,9 +43,27 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetFiles()
+        {
+            IEnumerable<FileModel> resultFiles;
+            try
+            {
+                string authHeader = Request.Headers["Authorization"];
+                var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
+                resultFiles = await _fileService.GetFilesByUserIdAsync(user.Result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            return Ok(resultFiles);
+        }
+
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetFiles(string id)
+        public async Task<IActionResult> GetFilesWithParentId([FromQuery] string id)
         {
             IEnumerable<FileModel> resultFiles;
             try
