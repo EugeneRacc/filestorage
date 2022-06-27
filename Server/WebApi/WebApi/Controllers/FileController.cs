@@ -29,23 +29,42 @@ namespace WebApi.Controllers
         [Authorize]
         public async Task<IActionResult> CreateDirectory([FromBody] FileModel model)
         {
+            FileModel result;
             try
             {
                 string authHeader = Request.Headers["Authorization"];
                 var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
                 model.UserId = user.Result;
-                await _fileService.CreateDir(model);
+                result = await _fileService.CreateDir(model);
             }
             catch (Exception e)
             {
                 return BadRequest(e);
             }
-            return Ok();
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetFiles()
+        {
+            IEnumerable<FileModel> resultFiles;
+            try
+            {
+                string authHeader = Request.Headers["Authorization"];
+                var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
+                resultFiles = await _fileService.GetFilesByUserIdAsync(user.Result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            return Ok(resultFiles);
         }
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetFiles(string id)
+        public async Task<IActionResult> GetFilesWithParentId(string id)
         {
             IEnumerable<FileModel> resultFiles;
             try

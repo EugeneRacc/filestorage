@@ -1,5 +1,7 @@
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Data
 {
@@ -42,10 +44,13 @@ namespace Data.Data
             modelBuilder.Entity<File>()
                 .Property(u => u.Size)
                 .HasDefaultValue("0");
+            modelBuilder.Entity<File>()
+                .Property(u => u.Date)
+                .HasDefaultValueSql("getdate()");
             //modelBuilder.Entity<File>()
-              //  .HasOne(e => e.FileFolder)
-               // .WithMany()
-              //  .HasForeignKey(p => p.ChildId);
+            //  .HasOne(e => e.FileFolder)
+            // .WithMany()
+            //  .HasForeignKey(p => p.ChildId);
             modelBuilder.Entity<File>()
                 .HasMany(e => e.ChildFiles)
                 .WithOne(x => x.FileFolder)
