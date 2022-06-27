@@ -1,0 +1,16 @@
+.disk {
+    margin-top: 20px;
+}
+.disk__btn {
+    display: flex;
+    margin-left: 5%;
+}
+.disk__create {
+    margin-left: 2.5%;
+}
+button{
+    min-width: 7.5%;
+    height: 30px;
+    border-radius: 10px;
+    background-color: white;
+}

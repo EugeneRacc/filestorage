@@ -1,11 +1,12 @@
 import Navbar from "./navbar/Navbar";
 import './app.css'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import Registration from "./registration/Registration";
 import Login from "./login/Login";
 import {useDispatch, useSelector} from "react-redux";
 import {auth} from "../actions/user";
 import {useEffect} from "react";
+import Disk from "./disk/Disk";
 
 
 function App() {
@@ -22,10 +23,16 @@ function App() {
                 <Navbar/>
 
                 <div className="wrap">
-                    {!isAuth &&
+                    {!isAuth ?
                         <Routes>
                             <Route path="/registration" element={<Registration />} />
                             <Route path="/login" element={<Login />} />
+                            <Route path="*" element={<Navigate replace to="/login"/>} />
+                        </Routes>
+                        :
+                        <Routes>
+                            <Route exact path="/" element={<Disk />} />
+                            <Route path="*" element={<Navigate replace to="/"/>} />
                         </Routes>
                     }
                 </div>
