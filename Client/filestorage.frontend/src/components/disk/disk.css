@@ -1,5 +1,6 @@
 .disk {
     margin-top: 20px;
+    height: 100%;
 }
 .disk__btn {
     display: flex;
@@ -15,6 +16,36 @@ button{
     background-color: white;
 }
 
+.disk__upload-input {
+    display: none;
+}
+.disk__back{
+    height: 40px;
+}
+.disk__create{
+    height: 40px;
+}
+.disk__upload-label {
+    border: 2px solid #566885;
+    border-radius: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: 40px;
+    display: flex;
+    min-width: 150px;
+    height: 40px;
+}
+.disk__upload-label:hover{
+    background-color: #b5e8e8;
+
+}
+.disk__upload-img {
+    display: flex;
+}
+p{
+    margin-left: 10px;
+    padding-top: 5px;
+}
 .popup {
     width: 100%;
     height: 100vh;
@@ -59,5 +90,14 @@ button{
     background-color: #fff;
 }
 
-
+.drop-area {
+    width: 95%;
+    height: calc(100vh - 50px - 60px);
+    border: dashed #566885 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    margin: 20px auto;
+}
 

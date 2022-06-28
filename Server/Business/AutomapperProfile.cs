@@ -14,9 +14,11 @@ namespace Business
                     => u.MapFrom(src => src.Role.RoleName))
                 .ForMember(us => us.UsedDiskSpace, u
                     => u.MapFrom(src => src.UsedDiskSpade))
+                .ForMember(us => us.DiskSpace, u => u.Ignore())
                 .ForMember(um => um.FilesIds, u
                     => u.MapFrom(src => src.Files.Select(x => x.Id)))
                 .ReverseMap();
+            
             CreateMap<Data.Entities.File, FileModel>()
                 .ForMember(um => um.ChildFileIds, u
                     => u.MapFrom(src => src.ChildFiles.Where(x => x.ParentId != null).Select(y => y.Id)))

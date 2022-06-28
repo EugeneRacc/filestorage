@@ -88,7 +88,7 @@ namespace Business.Services
             }
 
             db.UserRepository.Update(mapper.Map<User>(model));
-            await db.SaveAsync();
+            await db.SaveAsync(mapper.Map<User>(model));
 
         }
 

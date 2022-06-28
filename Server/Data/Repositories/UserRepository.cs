@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Data.Data;
 using Data.Entities;
@@ -56,6 +57,20 @@ namespace Data.Repositories
 
         public void Update(User entity)
         {
+            // 
+            var local = _fileStorageDbContext.Set<User>()
+                .Local
+                .FirstOrDefault(entry => entry.Id.Equals(entity.Id));
+
+            // check if local is not null 
+            if (local != null)
+            {
+                // detach
+                _fileStorageDbContext.Entry(local).State = EntityState.Detached;
+            }
+            // set Modified flag in your entry
+            _fileStorageDbContext.Entry(entity).State = EntityState.Modified;
+
             EntityEntry entityEntry = _fileStorageDbContext.Entry<User>(entity);
             entityEntry.State = EntityState.Modified;
         }

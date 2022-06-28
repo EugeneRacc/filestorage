@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
 using Business.Services;
 using Data.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -79,5 +81,47 @@ namespace WebApi.Controllers
             }
             return Ok(resultFiles);
         }
+
+        
+        [HttpPost("upload"), DisableRequestSizeLimit]
+        [Authorize]
+        public async Task<IActionResult> UploadFile([FromForm] IFormFile uploadedFile, [FromForm]string? parentId)
+        {
+            FileModel addedlFile;
+            try
+            {
+                string authHeader = Request.Headers["Authorization"];
+                var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
+                addedlFile = await _fileService.UploadFileAsync(user.Result, parentId, uploadedFile);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
+            return Ok(addedlFile);
+        }
+
+        [HttpGet("download"), DisableRequestSizeLimit]
+        [Authorize]
+        public FileContentResult DownloadFile([FromQuery] string id)
+        {
+            IEnumerable<FileModel> resultFiles;
+            DownloadFileModel resultDownloadFile;
+            try
+            {
+                string authHeader = Request.Headers["Authorization"];
+                var userId = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
+                resultDownloadFile = _fileService.DownloadFileAsync(userId.Result, int.Parse(id)).Result;
+                return new FileContentResult(resultDownloadFile.Memory, resultDownloadFile.Extension)
+                {
+                    FileDownloadName = resultDownloadFile.FileName
+                };
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+            }
+        }
     }
-}
+
