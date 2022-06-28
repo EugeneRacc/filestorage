@@ -72,13 +72,26 @@ namespace Business.Services
             await _db.SaveAsync();
         }
 
+        public async Task DeleteAsync(int modelId, int userId)
+        {
+            var fileToDelete = await GetByIdAsync(modelId);
+            if(fileToDelete == null || fileToDelete.UserId != userId)
+            {
+                throw new FileStorageException("User or File with such an id doesn't exist");
+            }
+            string path = GetPath(userId, fileToDelete.Path);
+            if(DeleteLocalFiles(path, fileToDelete.Type) == false)
+            {
+                throw new FileStorageException("Can't delete this file");
+            }
+            await _db.FileRepository.DeleteByIdAsync(fileToDelete.Id);
+            await _db.SaveAsync();
+        }
         public async Task DeleteAsync(int modelId)
         {
             await _db.FileRepository.DeleteByIdAsync(modelId);
             await _db.SaveAsync();
-
         }
-
         public async Task<FileModel> CreateDir(FileModel model)
         {
             File parentFile = null;
@@ -131,19 +144,6 @@ namespace Business.Services
 
             }
             
-        }
-
-        public void CreateDirWithAllInfo(FileModel file)
-        {
-            var filePath = $"{_configuration["FilePath"]}\\{file.UserId}\\{file.Path}";
-            if (!System.IO.Directory.Exists(filePath))
-            {
-                System.IO.Directory.CreateDirectory(filePath);
-            }
-            else
-            {
-                throw new FileStorageException("File already exists");
-            }
         }
 
         public async Task<IEnumerable<FileModel>> GetFilesByParentIdAsync(int userId, int? parentId)
@@ -235,6 +235,40 @@ namespace Business.Services
             return new DownloadFileModel(ext, System.IO.File.ReadAllBytes(_configuration["FilePath"] +  $"\\{userId}\\" + file.Path), file.Name);
         }
 
-        
+        public void CreateDirWithAllInfo(FileModel file)
+        {
+            var filePath = $"{_configuration["FilePath"]}\\{file.UserId}\\{file.Path}";
+            if (!System.IO.Directory.Exists(filePath))
+            {
+                System.IO.Directory.CreateDirectory(filePath);
+            }
+            else
+            {
+                throw new FileStorageException("File already exists");
+            }
+        }
+
+        private string GetPath(int userId, string filePath)
+        {
+            return _configuration["FilePath"] + $"\\{userId}\\" + filePath;
+        }
+
+        private bool DeleteLocalFiles(string path, string type)
+        {
+            if(type == "dir" && System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.Delete(path);
+                return true;
+            }
+            if(type != "dir" && System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

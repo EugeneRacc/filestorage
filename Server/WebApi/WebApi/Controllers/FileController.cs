@@ -121,7 +121,26 @@ namespace WebApi.Controllers
             {
                 return null;
             }
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> Delete([FromQuery] string modelId)
+        {
+            try
+            {
+                string authHeader = Request.Headers["Authorization"];
+                var userId = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
+                await _fileService.DeleteAsync(int.Parse(modelId),userId.Result);
+                
             }
+            catch (Exception e)
+            {
+                return BadRequest(error: 400);
+            }
+            return Ok("File was deleted");
         }
     }
+
+}
 
