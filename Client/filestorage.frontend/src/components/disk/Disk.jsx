@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {createDir, getFiles, uploadFile} from "../../actions/file";
+import {getFiles, uploadFile} from "../../actions/file";
 import FileList from "../fileList/FileList";
 import "./disk.css"
 import Popup from "./Popup";
@@ -13,10 +13,11 @@ const Disk = () => {
     const currentDir = useSelector(state => state.files.currentDir)
     const dirStack = useSelector(state => state.files.dirStack)
     const [dragEnter, setDragEnter] = useState(false)
+    const [sort, setSort] = useState('type')
 
     useEffect(() => {
-        dispatch((getFiles(currentDir)))
-    }, [currentDir]);
+        dispatch((getFiles(currentDir, sort)))
+    }, [currentDir, sort]);
 
 
     function showPopupHandler() {
@@ -66,6 +67,11 @@ const Disk = () => {
                     <input multiple={true} onChange={(event) => fileUploadHandler(event)}
                         type="file" id="disk__upload-input" className="disk__upload-input" />
                 </div>
+                <select value={sort} onChange={(e) => setSort(e.target.value)} className="disk__select">
+                    <option value="name">Sort by name</option>
+                    <option value="type">Sort by type</option>
+                    <option value="date">Sort by date</option>
+                </select>
             </div>
             <FileList />
             <Popup />

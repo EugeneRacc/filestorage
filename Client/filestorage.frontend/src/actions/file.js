@@ -3,11 +3,20 @@ import axios from "axios";
 import {addFile, deleteFileReducer, setFiles} from "../reducers/fileReducer";
 
 
-export function getFiles(dirId){
+export function getFiles(dirId, sort){
     return async dispatch => {
         try{
-            const response = await axios.get(
-                `https://localhost:44368/api/1.0/file${dirId ? '/'+dirId : ''}`, {
+            let url = `https://localhost:44368/api/1.0/file`;
+            if(dirId){
+                 url = `https://localhost:44368/api/1.0/file/dirId`
+            }
+            if(sort){
+                 url = `https://localhost:44368/api/1.0/file?sortType=${sort}`
+            }
+            if(sort && dirId){
+                 url = `https://localhost:44368/api/1.0/file/${dirId}?sortType=${sort}`
+            }
+            const response = await axios.get(url, {
                     headers: {Authorization: `Bearer ${localStorage.getItem('token')}`}
                 });
             console.log(response.data)

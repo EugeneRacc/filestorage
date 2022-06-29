@@ -79,7 +79,7 @@ p{
     justify-content: space-between;
 }
 .popup input {
-    margin: 20px 0px;
+    margin: 20px 0;
 }
 
 .popup__close {
@@ -101,3 +101,10 @@ p{
     margin: 20px auto;
 }
 
+select {
+    margin-left: 40px;
+    border-radius: 10px;
+    height: 25px;
+    display: flex;
+    align-self: center;
+}
