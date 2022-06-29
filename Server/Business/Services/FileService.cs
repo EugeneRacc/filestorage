@@ -146,16 +146,28 @@ namespace Business.Services
             
         }
 
-        public async Task<IEnumerable<FileModel>> GetFilesByParentIdAsync(int userId, int? parentId)
+        public async Task<IEnumerable<FileModel>> GetFilesByParentIdAsync(int userId, int? parentId, string? sortType)
         {
-            return (await GetAllAsync())
+            var userFiles = (await GetAllAsync())
                 .Where(x => x.UserId == userId && x.ParentId == parentId);
+            if (userFiles == null)
+            {
+                return null;
+            }
+
+            return SortFiles(userFiles, sortType);
         }
 
-        public async Task<IEnumerable<FileModel>> GetFilesByUserIdAsync(int userId)
+        public async Task<IEnumerable<FileModel>> GetFilesByUserIdAsync(int userId, string? sortType)
         {
-            return (await GetAllAsync())
+            var userFiles = (await GetAllAsync())
                 .Where(x => x.UserId == userId && x.ParentId == null);
+            if(userFiles == null)
+            {
+                throw new FileStorageException("Files aren't exist");
+            }
+
+            return SortFiles(userFiles, sortType);
         }
 
         public async Task<FileModel> UploadFileAsync(int userId, string? parentId, IFormFile formFile)
@@ -268,6 +280,21 @@ namespace Business.Services
             else
             {
                 return false;
+            }
+        }
+
+        private IEnumerable<FileModel> SortFiles(IEnumerable<FileModel> files, string? sortType)
+        {
+            switch (sortType)
+            {
+                case "name":
+                    return files.OrderBy(f => f.Name);
+                case "type":
+                    return files.OrderBy(f => f.Type);
+                case "date":
+                    return files.OrderBy(f => f.Date);
+                default:
+                    return files;
             }
         }
     }

@@ -48,14 +48,14 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetFiles()
+        public async Task<IActionResult> GetFiles([FromQuery] string? sortType)
         {
             IEnumerable<FileModel> resultFiles;
             try
             {
                 string authHeader = Request.Headers["Authorization"];
                 var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
-                resultFiles = await _fileService.GetFilesByUserIdAsync(user.Result);
+                resultFiles = await _fileService.GetFilesByUserIdAsync(user.Result, sortType);
             }
             catch (Exception e)
             {
@@ -66,14 +66,14 @@ namespace WebApi.Controllers
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetFilesWithParentId(string id)
+        public async Task<IActionResult> GetFilesWithParentId(string id, [FromQuery] string? sortType)
         {
             IEnumerable<FileModel> resultFiles;
             try
             {
                 string authHeader = Request.Headers["Authorization"];
                 var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
-                resultFiles = await _fileService.GetFilesByParentIdAsync(user.Result, int.Parse(id));
+                resultFiles = await _fileService.GetFilesByParentIdAsync(user.Result, int.Parse(id), sortType);
             }
             catch (Exception e)
             {
