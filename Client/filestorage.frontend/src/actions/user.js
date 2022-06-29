@@ -13,10 +13,10 @@ export const registration = async (email, password, confirmPassword) => {
                 email,
                 password
             })
-        alert(response.data.message + "Correctly registered");
+        alert(response.data + "Correctly registered");
     }
     catch (e){
-        alert(e.response.data.message + " smh went wrong");
+        alert(e.response.data + " smh went wrong");
     }
 }
 
@@ -33,7 +33,7 @@ export const login = (email, password) => {
                 localStorage.setItem('token', response.data.token);
                 console.log(response.data);
         } catch (e) {
-            alert(e.response.data.message + " smh went wrong");
+            alert(e.response.data + " smh went wrong");
         }
     }
 }
@@ -48,7 +48,7 @@ export const auth = () => {
             localStorage.setItem('token', response.data.token);
             console.log(response.data);
         } catch (e) {
-            alert(e.response.data.message + " smh went wrong");
+            console.log(e.response)
             localStorage.removeItem('token')
         }
     }
