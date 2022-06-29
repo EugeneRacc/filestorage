@@ -1,3 +1,5 @@
+using Data.Data;
+using Data.Entities;
 using System.Threading.Tasks;
 
 namespace Data.Interfaces
@@ -9,5 +11,6 @@ namespace Data.Interfaces
         IRoleRepository RoleRepository { get; }
         IUserRepository UserRepository { get; }
         Task SaveAsync();
+        Task SaveAsync(User user);
     }
 }

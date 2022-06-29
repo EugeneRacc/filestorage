@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 using Data.Entities;
 using Data.Enum;
@@ -14,6 +15,7 @@ namespace Business.Models
         public string Password { get; set; }
         public string RoleName { get; set; } = "User";
         public string? UsedDiskSpace { get; set; }
+        public string? DiskSpace { get; set; }
         public ICollection<int>? FilesIds { get; set; }
     }
 }
