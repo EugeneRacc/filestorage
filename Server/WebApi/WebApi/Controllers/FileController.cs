@@ -64,6 +64,32 @@ namespace WebApi.Controllers
             return Ok(resultFiles);
         }
 
+
+        [HttpGet("filter")]
+        [Authorize]
+        public async Task<IActionResult> GetFilesByName([FromQuery] string? fileName)
+        {
+            IEnumerable<FileModel> resultFiles;
+            try
+            {
+                if (fileName == null)
+                {
+                    await GetFiles(null);
+                    return Ok();
+                }
+                string authHeader = Request.Headers["Authorization"];
+                var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
+                resultFiles = await _fileService.GetFilesByName(user.Result, fileName);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            return Ok(resultFiles);
+        }
+
+
+
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetFilesWithParentId(string id, [FromQuery] string? sortType)
@@ -140,6 +166,8 @@ namespace WebApi.Controllers
             }
             return Ok("File was deleted");
         }
+
+        
     }
 
 }

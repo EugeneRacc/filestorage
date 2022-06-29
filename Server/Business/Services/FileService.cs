@@ -169,6 +169,17 @@ namespace Business.Services
 
             return SortFiles(userFiles, sortType);
         }
+        public async Task<IEnumerable<FileModel>> GetFilesByName(int userId, string fileName)
+        {
+            var userFiles = (await GetAllAsync())
+                .Where(x => x.UserId == userId && x.Name.ToLower().Contains(fileName.ToLower()));
+            if (userFiles == null)
+            {
+                throw new FileStorageException("Files aren't exist");
+            }
+
+            return userFiles;
+        }
 
         public async Task<FileModel> UploadFileAsync(int userId, string? parentId, IFormFile formFile)
         {

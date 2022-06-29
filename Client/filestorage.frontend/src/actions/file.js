@@ -1,14 +1,16 @@
 'use strict'
 import axios from "axios";
 import {addFile, deleteFileReducer, setFiles} from "../reducers/fileReducer";
+import {hideLoader, showLoader} from "../reducers/appReducer";
 
 
 export function getFiles(dirId, sort){
     return async dispatch => {
         try{
+            dispatch(showLoader())
             let url = `https://localhost:44368/api/1.0/file`;
             if(dirId){
-                 url = `https://localhost:44368/api/1.0/file/dirId`
+                 url = `https://localhost:44368/api/1.0/file/${dirId}`
             }
             if(sort){
                  url = `https://localhost:44368/api/1.0/file?sortType=${sort}`
@@ -23,7 +25,10 @@ export function getFiles(dirId, sort){
             dispatch(setFiles(response.data))
         }
         catch (e){
-            alert(e.response.data.message)
+
+        }
+        finally {
+            dispatch(hideLoader())
         }
     }
 }
@@ -110,6 +115,26 @@ export function deleteFile(file){
         }
         catch (e){
             console.log("Something went wrong")
+        }
+    }
+}
+
+
+export function searchFiles(search){
+
+    return async dispatch => {
+        try{
+            const response = await axios.get(`https://localhost:44368/api/1.0/file/filter?fileName=${search}`,
+                {headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }});
+            dispatch(setFiles(response.data))
+        }
+        catch (e){
+            console.log("Something went wrong")
+        }
+        finally {
+            dispatch(hideLoader())
         }
     }
 }
