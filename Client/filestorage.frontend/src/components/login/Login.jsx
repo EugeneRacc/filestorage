@@ -7,12 +7,13 @@ import {login} from "../../actions/user";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const dispatch = useDispatch();
     return (
         <div className="authorization">
             <div className="authorization__header">Log In</div>
-            <Input value={email} setValue={setEmail} type="text" placeholder="Email"/>
-            <Input value={password} setValue={setPassword} type="password" placeholder="Password"/>
+            <Input onChange={e => setEmail(e.target.value)} value={email} setValue={setEmail} type="text" placeholder="Email"/>
+            <Input onChange={e => setPassword(e.target.value)} value={password} setValue={setPassword} type="password" placeholder="Password"/>
             <button className="authorization__btn" onClick={() => dispatch(login(email, password))}>
                 Sign In
             </button>
