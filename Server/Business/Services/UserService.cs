@@ -72,8 +72,7 @@ namespace Business.Services
                 return;
             await db.UserRepository.AddAsync(customer);
             await db.SaveAsync();
-            new FileService(db, mapper, configuration).CreateDirWithAllInfo(
-                new FileModel { UserId = id, Name = $"{id}" });
+           
         }
 
         public async Task UpdateAsync(UserModel model)

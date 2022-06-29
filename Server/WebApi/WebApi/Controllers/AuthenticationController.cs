@@ -54,6 +54,7 @@ namespace WebApi.Controllers
             {
                 var token = Generate(user.Result);
                 user.Result.Password = null;
+                CreateUserFolder(user.Result);
                 return Ok(new { token, user = user.Result });
             }
             return NotFound("User not found");
@@ -99,6 +100,15 @@ namespace WebApi.Controllers
                 return currentUser;
             }
             return null;
+        }
+
+        private void CreateUserFolder(UserModel model)
+        {
+            string path = _configuration["FilePath"] + $"\\{model.Id}";
+            if (!System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
         }
     }
 }
