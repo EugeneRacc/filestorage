@@ -23,9 +23,9 @@ const File = ({file}) => {
         downloadFile(file);
     }
 
-    function deleteHandler(e) {
-        e.stopPropagation();
-        dispatch(deleteFile(file));
+    function deleteFileHandler(event) {
+        event.stopPropagation();
+        dispatch(deleteFile(file))
     }
 
     return (
@@ -37,7 +37,7 @@ const File = ({file}) => {
             {file.type !== "dir" &&
                 <button onClick={(e) => downloadHandler(e)}
                     className="file__btn file__download">Download</button>}
-            <button onClick={(e) => deleteHandler(e)} className="file__btn file__delete">Delete</button>
+            <button onClick={(e) => deleteFileHandler(e)} className="file__btn file__delete">Delete</button>
         </div>
     );
 };

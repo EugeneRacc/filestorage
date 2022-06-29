@@ -1,5 +1,7 @@
+'use strict'
 import axios from "axios";
-import {addFile, setFiles} from "../reducers/fileReducer";
+import {addFile, deleteFileReducer, setFiles} from "../reducers/fileReducer";
+
 
 export function getFiles(dirId){
     return async dispatch => {
@@ -86,18 +88,19 @@ export async function downloadFile(file){
     }
 }
 
-export async function deleteFile(file){
+export function deleteFile(file){
+
     return async dispatch => {
         try{
-            const response = await axios.delete(`https://localhost:44368/api/1.0/file?id=${file.id}`,
+            const response = await axios.delete(`https://localhost:44368/api/1.0/file?modelId=${file.id}`,
                 {headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
         }});
-            dispatch(deleteFile(file.id))
-            alert(response.data.message)
+            dispatch(deleteFileReducer(file.id))
+            alert(response.data)
         }
         catch (e){
-            alert(e.response.data.message)
+            console.log("Something went wrong")
         }
     }
 }

@@ -12,7 +12,6 @@ namespace Business.Models
         public string Name { get; set; }
         public string Type { get; set; }
         public DateTime Date { get; set; }
-        public string DiskSpace { get; set; }
         public int? ParentId { get; set; }
         public int? UserId { get; set; }
         public string? Path { get; set; }

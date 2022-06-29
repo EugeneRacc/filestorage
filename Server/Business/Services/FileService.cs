@@ -202,7 +202,7 @@ namespace Business.Services
             {
                 Name = formFile.FileName.Split(".")[0],
                 Type = formFile.FileName.Split('.')[^1],
-                DiskSpace = formFile.Length.ToString(),
+                //DiskSpace = formFile.Length.ToString(),
                 Path = parent != null ? parent.Path + "\\" + formFile.FileName : formFile.FileName,
                 ParentId = resParentId,
                 UserId = userId
