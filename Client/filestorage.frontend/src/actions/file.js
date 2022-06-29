@@ -1,11 +1,13 @@
 'use strict'
 import axios from "axios";
 import {addFile, deleteFileReducer, setFiles} from "../reducers/fileReducer";
+import {hideLoader, showLoader} from "../reducers/appReducer";
 
 
 export function getFiles(dirId, sort){
     return async dispatch => {
         try{
+            dispatch(showLoader())
             let url = `https://localhost:44368/api/1.0/file`;
             if(dirId){
                  url = `https://localhost:44368/api/1.0/file/dirId`
@@ -24,6 +26,9 @@ export function getFiles(dirId, sort){
         }
         catch (e){
             alert(e.response.data.message)
+        }
+        finally {
+            dispatch(hideLoader())
         }
     }
 }
