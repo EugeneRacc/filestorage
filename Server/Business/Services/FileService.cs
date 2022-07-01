@@ -95,7 +95,7 @@ namespace Business.Services
         public async Task<FileModel> CreateDir(FileModel model)
         {
             File parentFile = null;
-            model.AccessLink = MD5Hash.GetMD5Hash(model.Name + model.Type + model.ParentId);
+            model.AccessLink = MD5Hash.GetMD5Hash(model.Name + model.Type+ ";" + model.ParentId);
             if (model.ParentId != null) {
                 parentFile = await _db.FileRepository.GetByIdAsync((int)model.ParentId);
             }
@@ -227,7 +227,7 @@ namespace Business.Services
                 Name = formFile.FileName.Split(".")[0],
                 Type = formFile.FileName.Split('.')[^1],
                 //DiskSpace = formFile.Length.ToString(),
-                AccessLink = MD5Hash.GetMD5Hash(formFile.FileName.Split(".")[0] + formFile.FileName.Split('.')[^1] + resParentId),
+                AccessLink = MD5Hash.GetMD5Hash(formFile.FileName.Split(".")[0] + formFile.FileName.Split('.')[^1]+ ";" + resParentId),
                 Path = parent != null ? parent.Path + "\\" + formFile.FileName : formFile.FileName,
                 ParentId = resParentId,
                 UserId = userId

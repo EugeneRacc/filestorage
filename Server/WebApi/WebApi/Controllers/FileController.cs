@@ -150,21 +150,24 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("share"), DisableRequestSizeLimit]
-        public FileContentResult DownloadFileByLink([FromQuery] string link)
+        public IActionResult DownloadFileByLink([FromQuery] string link)
         {
             IEnumerable<FileModel> resultFiles;
             DownloadFileModel resultDownloadFile;
             try
             {
                 resultDownloadFile = _fileService.DownloadFileByAccessLinkAsync(link).Result;
-                return new FileContentResult(resultDownloadFile.Memory, resultDownloadFile.Extension)
+                HttpContext.Response.Headers.Add("x-my-custom-header", $"{resultDownloadFile.FileName}.{resultDownloadFile.Type}");
+                return Ok(new FileContentResult(resultDownloadFile.Memory, resultDownloadFile.Extension)
                 {
-                    FileDownloadName = resultDownloadFile.FileName + "." + resultDownloadFile.Type
-                };
+                   FileDownloadName = resultDownloadFile.FileName + "." + resultDownloadFile.Type
+                });
+                return Ok(resultDownloadFile.FileName);
+                
             }
             catch (Exception e)
             {
-                return null;
+                return BadRequest();
             }
         }
 
