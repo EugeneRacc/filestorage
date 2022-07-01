@@ -47,6 +47,9 @@ namespace Data.Data
             modelBuilder.Entity<File>()
                 .Property(u => u.Date)
                 .HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<File>()
+                .Property(u => u.AccessLink)
+                .HasDefaultValueSql("HASHBYTES('MD5', CAST(getdate() AS nvarchar(50)))");
             //modelBuilder.Entity<File>()
             //  .HasOne(e => e.FileFolder)
             // .WithMany()

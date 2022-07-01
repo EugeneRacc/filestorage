@@ -95,6 +95,7 @@ namespace Business.Services
         public async Task<FileModel> CreateDir(FileModel model)
         {
             File parentFile = null;
+            model.AccessLink = MD5Hash.GetMD5Hash(model.Name + model.Type + model.ParentId);
             if (model.ParentId != null) {
                 parentFile = await _db.FileRepository.GetByIdAsync((int)model.ParentId);
             }
@@ -226,6 +227,7 @@ namespace Business.Services
                 Name = formFile.FileName.Split(".")[0],
                 Type = formFile.FileName.Split('.')[^1],
                 //DiskSpace = formFile.Length.ToString(),
+                AccessLink = MD5Hash.GetMD5Hash(formFile.FileName.Split(".")[0] + formFile.FileName.Split('.')[^1] + resParentId),
                 Path = parent != null ? parent.Path + "\\" + formFile.FileName : formFile.FileName,
                 ParentId = resParentId,
                 UserId = userId
@@ -257,7 +259,17 @@ namespace Business.Services
             var ext = file.Type.ToLower();
             return new DownloadFileModel(ext, System.IO.File.ReadAllBytes(_configuration["FilePath"] +  $"\\{userId}\\" + file.Path), file.Name);
         }
+        public async Task<DownloadFileModel> DownloadFileByAccessLinkAsync(string accessLink)
+        {
+            var file = (await GetAllAsync()).FirstOrDefault(al => al.AccessLink == accessLink);
+            if (file == null)
+            {
+                throw new FileStorageException("File isn't exist");
+            }
 
+            var ext = file.Type.ToLower();
+            return new DownloadFileModel(ext, System.IO.File.ReadAllBytes(_configuration["FilePath"] + $"\\{file.UserId}\\" + file.Path), file.Name);
+        }
         public void CreateDirWithAllInfo(FileModel file)
         {
             var filePath = $"{_configuration["FilePath"]}\\{file.UserId}\\{file.Path}";
