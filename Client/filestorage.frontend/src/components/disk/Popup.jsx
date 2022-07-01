@@ -4,6 +4,7 @@ import "./disk.css"
 import {useDispatch, useSelector} from "react-redux";
 import {setPopupDisplay} from "../../reducers/fileReducer";
 import {createDir} from "../../actions/file";
+import {CopyToClipboard} from "react-copy-to-clipboard";
 const Popup = () => {
     const [dirName, setDirName] = useState('')
     const popupDisplay = useSelector(state => state.files.popupDisplay)
@@ -31,6 +32,7 @@ const Popup = () => {
                 </div>
                 <Input onChange={e => setDirName(e.target.value)} type="text" placeholder="Name of new folder" value={dirName} setValue={setDirName}/>
                 <button className="popup__create" onClick={() => createHandler()}>Create</button>
+
             </div>
         </div>
     );

@@ -4,12 +4,13 @@ const ADD_FILE = "ADD_FILE";
 const SET_POPUP_DISPLAY = "SET_POPUP_DISPLAY"
 const PUSH_TO_STACK = "PUSH_TO_STACK"
 const DELETE_FILE = "DELETE_FILE"
-
+const SET_SPAN_DISPLAY = "SET_SPAN_DISPLAY"
 const defaultState = {
     files:[],
     currentDir: null,
     popupDisplay: 'none',
-    dirStack: []
+    dirStack: [],
+    spanDisplay: 'none'
 }
 
 export default function fileReducer(state = defaultState, action){
@@ -26,6 +27,8 @@ export default function fileReducer(state = defaultState, action){
             return {...state, dirStack: [...state.dirStack, action.payload]};
         case DELETE_FILE:
             return {...state, files: [...state.files.filter(file => file.id != action.payload)]}
+        case SET_SPAN_DISPLAY:
+            return {...state, spanDisplay: action.payload}
         default:
             return state;
     }
@@ -37,3 +40,4 @@ export const addFile = (file) => ({type: ADD_FILE, payload: file})
 export const setPopupDisplay = (display) => ({type: SET_POPUP_DISPLAY, payload: display})
 export const pushToStack = (dir) => ({type: PUSH_TO_STACK, payload: dir})
 export const deleteFileReducer = (dirId) => ({type: DELETE_FILE, payload: dirId})
+export const setSpanDisplay = (display) => ({type: SET_SPAN_DISPLAY, payload: display})
