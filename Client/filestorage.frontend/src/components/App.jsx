@@ -7,6 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {auth} from "../actions/user";
 import {useEffect} from "react";
 import Disk from "./disk/Disk";
+import Download from "./fileList/file/Download";
+
 
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
                         <Routes>
                             <Route path="/registration" element={<Registration />} />
                             <Route path="/login" element={<Login />} />
+                            <Route path="/share/*" element={<Download />}
+                                   />
                             <Route path="*" element={<Navigate replace to="/login"/>} />
                         </Routes>
                         :

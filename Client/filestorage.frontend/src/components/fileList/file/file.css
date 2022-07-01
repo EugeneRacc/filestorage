@@ -54,11 +54,32 @@
     display: inline-block;
 }
 .file__span{
-    background-color: black;
+    font-size: 20px;
+    background-color: #26495c;
     color: white;
     position: absolute;
-    margin-left: -10%;
-    margin-top: 3px;
+    margin-left: -14%;
     opacity: 0.8;
     text-align: center;
+}
+
+.alert-enter{
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.alert-enter-active{
+    opacity: 0.8;
+    transform: translateX(0);
+    transition: opacity 300ms, transform 300ms;
+}
+
+.alert-exit{
+    opacity: 0.8;
+}
+
+.alert-exit-active{
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 300ms, transform 300ms;
 }

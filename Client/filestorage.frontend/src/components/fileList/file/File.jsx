@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import "./file.css"
 import directoryLogo from "../../../assets/icon/folder.svg"
 import fileLogo from "../../../assets/icon/file.svg"
@@ -13,6 +13,7 @@ const File = ({file}) => {
 
     const dispatch = useDispatch()
     const currentDir = useSelector(state => state.files.currentDir)
+    const [showSpan, setShowSpan] = useState(false)
     const spanDisplay = useSelector(state => state.files.spanDisplay)
     function openDirHandler() {
         if(file.type === "dir") {
@@ -32,9 +33,9 @@ const File = ({file}) => {
     }
 
     function setSpanHandler(){
-        dispatch(setSpanDisplay("flex"))
+        setShowSpan(true)
         const timer = setTimeout(() => {
-            dispatch(setSpanDisplay("none"))
+            setShowSpan(false)
         }, 3000);
         return () => clearTimeout(timer);
     }
@@ -44,8 +45,8 @@ const File = ({file}) => {
             <div className="file__name">{file.name}</div>
             {file.type !== "dir" && <CopyToClipboard text={`http://localhost:3000/share/${file.accessLink}`}>
                 <div onClick={() => setSpanHandler()} className="file__share">
-                    <CSSTransition timeout={300} unmountOnExit>
-                        <span className="file__span" style={{display: spanDisplay}}>Copied to clipboard</span>
+                    <CSSTransition in={showSpan} classNames="alert" timeout={300} unmountOnExit>
+                        <span className="file__span">Copied to clipboard</span>
                     </CSSTransition>
                     <img src={shareLogo} className="file__share-logo" alt="share"/></div>
             </CopyToClipboard>}
