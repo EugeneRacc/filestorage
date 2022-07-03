@@ -1,0 +1,28 @@
+.user-list {
+    margin: 20px 0;
+}
+.user-list__header {
+    display: grid;
+    grid-template-columns: 1fr 4fr repeat(4, 1fr);
+}
+.user-list__name {
+    grid-column-start: 2;
+}
+.user-list__role {
+    grid-column-start: 5;
+    justify-self: center;
+}
+.user-list__uds {
+    grid-column-start: 6;
+    justify-self: center;
+}
+
+.notfound{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #566885;
+    height: calc(80vh - 30px);
+}

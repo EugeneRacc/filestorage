@@ -8,35 +8,36 @@ import {auth} from "../actions/user";
 import {useEffect} from "react";
 import Disk from "./disk/Disk";
 import Download from "./fileList/file/Download";
+import AdminPanel from "./adminPanel/AdminPanel";
 
 
 
 function App() {
-    const isAuth = useSelector(state => state.user.isAuth);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(auth())
     }, [])
+    const isAuth = useSelector(state => state.user.isAuth);
 
-  return (
+return (
         <BrowserRouter>
             <div className="App">
                 <Navbar/>
 
                 <div className="wrap">
-                    {!isAuth ?
+                    {isAuth === false?
                         <Routes>
                             <Route path="/registration" element={<Registration />} />
                             <Route path="/login" element={<Login />} />
-                            <Route path="/share/*" element={<Download />}
-                                   />
-                            <Route path="*" element={<Navigate replace to="/login"/>} />
+                            <Route path="/share/*" element={<Download />}/>
+                            <Route path="*" element={<Login />} />
                         </Routes>
                         :
                         <Routes>
-                            <Route exact path="/" element={<Disk />} />
-                            <Route path="*" element={<Navigate replace to="/"/>} />
+                            <Route path="/" element={<Disk />} />
+                            <Route path="/admin-panel" element={<AdminPanel />} />
+                            <Route path="*" element={<Disk />} />
                         </Routes>
                     }
                 </div>

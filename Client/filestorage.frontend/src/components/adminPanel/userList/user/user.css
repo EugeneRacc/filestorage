@@ -1,0 +1,30 @@
+.user {
+    border-bottom: solid 2px #566885;
+    display: grid;
+    grid-template-columns: 1fr 5fr repeat(5, 1fr);
+    align-items: center;
+    width: 95%;
+    margin: 10px auto;
+}
+.user:hover {
+    transform: scale(1.02);
+}
+.user__img {
+    justify-self: center;
+}
+.user__role {
+    grid-column-start: 6;
+    justify-self: center;
+    display: inline-block;
+    margin-right: 30%;
+}
+.user__uds {
+    grid-column-start: 7;
+    justify-self: center;
+}
+.user:hover .user__date {
+    grid-column-start: 4;
+}
+.user:hover .user__size {
+    grid-column-start: 5;
+}

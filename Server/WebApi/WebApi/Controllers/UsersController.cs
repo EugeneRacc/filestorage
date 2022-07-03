@@ -29,34 +29,7 @@ namespace WebApi.Controllers
         {
             _userService = new UserService(uow, mapper, configuration);
         }
-        /// <summary>
-        /// Gets all UserModels.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        /// GET /api/{version}/users
-        /// </remarks>
-        /// <returns>Returns UserModel</returns>
-        /// <response code="200">Success</response>
-        /// <response code="401">If the user is unauthorized</response>
-        [HttpGet]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-         
-        public async Task<ActionResult<IEnumerable<UserModel>>> Get()
-        {
-            IEnumerable<UserModel> customers;
-            try
-            {
-                customers = await _userService.GetAllAsync();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-            return Ok(customers);
-        }
+        
         [HttpGet("Admins")]
         [Authorize(Roles = "User")]
         public ActionResult AdminEndpoint()

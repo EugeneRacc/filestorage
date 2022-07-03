@@ -1,4 +1,5 @@
 using AutoMapper;
+using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
 using Business.Services;
@@ -49,14 +50,16 @@ namespace WebApi.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> LogIn([FromBody] UserLogin value)
         {
-            var user = Authenticate(value); 
-            if(user != null)
+            var user = Authenticate(value);
+            if (user.Result == null)
             {
+                return NotFound();
+            }
                 var token = Generate(user.Result);
                 user.Result.Password = null;
                 CreateUserFolder(user.Result);
                 return Ok(new { token, user = user.Result });
-            }
+          
             return NotFound("User not found");
         }
         [AllowAnonymous]
@@ -65,14 +68,14 @@ namespace WebApi.Controllers
         {
             string authHeader = Request.Headers["Authorization"];
             var user = new AuthenticationService(_userService).GetUserByToken(authHeader);
-            if (user != null)
+            if(user == null)
             {
+                return NotFound();
+            }
                 var token = Generate(user.Result);
                 user.Result.Password = null;
                 
                 return Ok(new { token, user = user.Result });
-            }
-            return NotFound("User not found");
         }
         private string Generate(UserModel user)
         {
