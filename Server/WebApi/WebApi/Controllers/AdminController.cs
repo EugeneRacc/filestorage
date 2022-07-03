@@ -46,12 +46,31 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 
-        public async Task<ActionResult<IEnumerable<UserModel>>> Get([FromQuery] string? sort)
+        public async Task<ActionResult<IEnumerable<UserModel>>> Get([FromQuery] string? sort, string? name)
         {
             IEnumerable<UserModel> customers;
             try
             {
-                customers = await _adminService.GetAllUsersAsync(sort);
+                customers = await _adminService.GetAllUsersAsync(sort, name);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok(customers);
+        }
+
+        [HttpGet("users/{id}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+
+        public async Task<ActionResult<UserModel>> GetById(string id)
+        {
+            UserModel customers;
+            try
+            {
+                customers = await _adminService.GetByIdAsync(int.Parse(id));
             }
             catch (Exception)
             {

@@ -27,26 +27,32 @@ namespace Business.Services
             _userService = new UserService(uow, mapper, configuration);
         }
 
-        public async Task<IEnumerable<UserModel>> GetAllUsersAsync(string? sortType)
+        public async Task<IEnumerable<UserModel>> GetAllUsersAsync(string? sortType, string? searchingUser)
         {
             var userFiles = await _userService.GetAllAsync();
             if (userFiles == null)
             {
                 return null;
             }
-            return SortUsers(userFiles, sortType);
+            return SortUsers(userFiles, sortType, searchingUser);
+        }
+        public async Task<UserModel> GetByIdAsync(int id)
+        {
+            return await _userService.GetByIdAsync(id);
         }
 
-        private IEnumerable<UserModel> SortUsers(IEnumerable<UserModel> users, string? sortType)
+        private IEnumerable<UserModel> SortUsers(IEnumerable<UserModel> users, string? sortType, string? searchingUser)
         {
+            if (searchingUser == null)
+                searchingUser = "";
             switch (sortType)
             {
                 case "name":
-                    return users.OrderBy(f => f.Email);
+                    return users.Where(x => x.Email.Contains(searchingUser)).OrderBy(f => f.Email);
                 case "role":
-                    return users.OrderBy(f => f.RoleName);
+                    return users.Where(x => x.Email.Contains(searchingUser)).OrderBy(f => f.RoleName);
                 default:
-                    return users;
+                    return users.Where(x => x.Email.Contains(searchingUser));
             }
         }
     }
