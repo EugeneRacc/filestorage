@@ -1,6 +1,6 @@
 import Navbar from "./navbar/Navbar";
 import './app.css'
-import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
+import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Registration from "./registration/Registration";
 import Login from "./login/Login";
 import {useDispatch, useSelector} from "react-redux";
@@ -9,6 +9,7 @@ import {useEffect} from "react";
 import Disk from "./disk/Disk";
 import Download from "./fileList/file/Download";
 import AdminPanel from "./adminPanel/AdminPanel";
+import UserDetails from "./adminPanel/userList/user/UserDetails/UserDetails";
 
 
 
@@ -37,6 +38,7 @@ return (
                         <Routes>
                             <Route path="/" element={<Disk />} />
                             <Route path="/admin-panel" element={<AdminPanel />} />
+                            <Route path="/user-details" element={<UserDetails />}/>
                             <Route path="*" element={<Disk />} />
                         </Routes>
                     }
