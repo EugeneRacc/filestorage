@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './registration.css'
 import Input from "../../utils/input/Input";
 import {registration} from "../../actions/user";
+import {useNavigate} from "react-router-dom";
 let passwd = ""
 const Registration = () => {
     const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ const Registration = () => {
     const [passwordError, setPasswordError] = useState("Password can't be empty")
     const [confirmError, setConfirmError] = useState("Password can't be empty");
     const [formValid, setFormValid] = useState(false)
-
+    const navigate = useNavigate();
 
     useEffect(() => {
        if(emailError || passwordError || confirmError){
@@ -89,7 +90,7 @@ const Registration = () => {
             {(confirmDirty && confirmError) && <span style={{color: 'red'}}>{confirmError}</span>}
             <Input onChange={e => confirmHandler(e)}
                 onBlur={e => blurHandler(e)} name="confirm" value={confirmPassword} setValue={setConfirmPassword} type="password" placeholder="Confirm Password"/>
-            <button disabled={!formValid} className="registration__btn" onClick={() => registration(email, password, confirmPassword)}>
+            <button disabled={!formValid} className="registration__btn" onClick={() => registration(email, password, confirmPassword, navigate)}>
                 Sign Up
             </button>
         </div>

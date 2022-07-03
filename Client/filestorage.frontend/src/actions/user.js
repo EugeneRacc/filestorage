@@ -1,7 +1,7 @@
 import axios from "axios";
 import {setUser} from "../reducers/userReducer";
 
-export const registration = async (email, password, confirmPassword) => {
+export const registration = async (email, password, confirmPassword, nav) => {
         if(confirmPassword !== password) {
             alert("Passwords aren't same");
             return;
@@ -14,6 +14,10 @@ export const registration = async (email, password, confirmPassword) => {
                 password
             })
         alert(response.data + "Correctly registered");
+        const timer = setTimeout(() => {
+            nav("/");
+        }, 1000);
+        return () => clearTimeout(timer);
     }
     catch (e){
         alert(e.response.data + " smh went wrong");
