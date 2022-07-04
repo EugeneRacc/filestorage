@@ -81,10 +81,6 @@ namespace Business.Services
             {
                 throw new FileStorageException($"The user cannot be null {nameof(model)}");
             }
-            if (model.Password.Length < 8)
-            {
-                throw new FileStorageException($"The user cannot have such an easy password {nameof(model)}");
-            }
 
             db.UserRepository.Update(mapper.Map<User>(model));
             await db.SaveAsync(mapper.Map<User>(model));

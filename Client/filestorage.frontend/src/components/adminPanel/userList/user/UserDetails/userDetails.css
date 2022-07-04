@@ -34,7 +34,7 @@ span{
     font-weight: bold;
     font-size: 20px;
 }
-.user-details__btn:last-child{
+.user-details__btn:nth-child(3){
     display: flex;
     margin: 0 auto;
     width: 50%;

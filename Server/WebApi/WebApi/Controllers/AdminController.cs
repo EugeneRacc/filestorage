@@ -94,5 +94,21 @@ namespace WebApi.Controllers
             return Ok(resultFiles);
         }
 
+        [HttpPut("users")]
+        public async Task<ActionResult> Update([FromBody] UserModel value)
+        {
+
+            try
+            {
+                await _userService.UpdateAsync(value);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+
+            return Ok(value);
+        }
+
     }
 }

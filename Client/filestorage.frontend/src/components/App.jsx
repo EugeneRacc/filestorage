@@ -16,9 +16,10 @@ function App() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(auth())
+
     }, [])
     const isAuth = useSelector(state => state.user.isAuth);
-
+    let isAdmin = useSelector(state => state.user.currentUser.roleName) === "Admin"
 return (
         <BrowserRouter>
             <div className="App">
@@ -35,8 +36,10 @@ return (
                         :
                         <Routes>
                             <Route path="/" element={<Disk />} />
-                            <Route path="/admin-panel" element={<AdminPanel />} />
-                            <Route path="/user-details" element={<UserDetails />}/>
+                            {isAdmin &&<Route path="/admin-panel" element={<AdminPanel />} />}
+                            {isAdmin &&<Route path="/user-files" element={<Disk />} />}
+                            {isAdmin &&<Route path="/user-details" element={<UserDetails />}/>}
+                            <Route path="/share/*" element={<Download />}/>
                             <Route path="*" element={<Disk />} />
                         </Routes>
                     }

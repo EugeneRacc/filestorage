@@ -4,7 +4,6 @@ import "./disk.css"
 import {useDispatch, useSelector} from "react-redux";
 import {setPopupDisplay} from "../../reducers/fileReducer";
 import {createDir} from "../../actions/file";
-import {CopyToClipboard} from "react-copy-to-clipboard";
 const Popup = () => {
     const [dirName, setDirName] = useState('')
     const popupDisplay = useSelector(state => state.files.popupDisplay)

@@ -4,6 +4,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {setCurrentUser} from "../../../../../reducers/adminReducer";
 import {useNavigate} from "react-router-dom";
 import avatarIcon from "../../../../../assets/icon/person.svg"
+import {getUserFiles} from "../../../../../actions/admin";
+import {setPopupDisplay} from "../../../../../reducers/fileReducer";
+import AdminPopup from "../../../AdminPopup";
 
 const UserDetails = () => {
     const dispatch = useDispatch()
@@ -19,14 +22,24 @@ const UserDetails = () => {
         }
     }, [currentUser]);
 
-    function stepBackHandler() {
+    function stepBackToUsersHandler() {
         dispatch(setCurrentUser(null))
     }
+
+    function getUserFilesHandler() {
+        dispatch(getUserFiles(null, null, currentUser.id))
+        navigate("/user-files")
+    }
+
+    function changeInfoHandler() {
+        dispatch(setPopupDisplay("flex"))
+    }
+
     return (
 
             <div className="user-details">
                 <div className="user-details__btn">
-                    <button className="user-details__back" onClick={() => stepBackHandler()}>Back</button>
+                    <button className="user-details__back" onClick={() => stepBackToUsersHandler()}>Back</button>
                 </div>
                 {currentUser !== null ?
                 <div className="user-details__profile">
@@ -53,9 +66,13 @@ const UserDetails = () => {
                 </div>
                     :
                     <div></div>}
+
                 <div className="user-details__btn">
-                    <button className="user-details__btn-details" onClick={() => stepBackHandler()}>Get Files</button>
-                    <button className="user-details__btn-details" onClick={() => stepBackHandler()}>Change info</button>
+                    <button className="user-details__btn-details" onClick={() => getUserFilesHandler()}>Get Files</button>
+                    <button className="user-details__btn-details" onClick={() => changeInfoHandler()}>Change info</button>
+                </div>
+                <div className="user-details__admin-popup">
+                    {currentUser && <AdminPopup />}
                 </div>
             </div>
 

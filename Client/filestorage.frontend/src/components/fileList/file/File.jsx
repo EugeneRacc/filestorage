@@ -4,7 +4,7 @@ import directoryLogo from "../../../assets/icon/folder.svg"
 import fileLogo from "../../../assets/icon/file.svg"
 import shareLogo from "../../../assets/icon/share.svg"
 import {useDispatch, useSelector} from "react-redux";
-import {pushToStack, setCurrentDir, setSpanDisplay} from "../../../reducers/fileReducer";
+import {pushToStack, setCurrentDir} from "../../../reducers/fileReducer";
 import {deleteFile, downloadFile} from "../../../actions/file";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import {CSSTransition} from "react-transition-group";
@@ -14,8 +14,12 @@ const File = ({file}) => {
     const dispatch = useDispatch()
     const currentDir = useSelector(state => state.files.currentDir)
     const [showSpan, setShowSpan] = useState(false)
-    const spanDisplay = useSelector(state => state.files.spanDisplay)
+    const isAdmin = useSelector(state => state.user.currentUser.roleName) === "Admin"
+    const isCurrentUserNull = useSelector(state => state.users.currentUserId) !== null
     function openDirHandler() {
+        if(isAdmin && isCurrentUserNull){
+            return
+        }
         if(file.type === "dir") {
             dispatch(pushToStack(currentDir))
             dispatch(setCurrentDir(file.id))
