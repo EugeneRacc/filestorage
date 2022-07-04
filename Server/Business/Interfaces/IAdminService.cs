@@ -11,5 +11,6 @@ namespace Business.Interfaces
     {
         public Task<IEnumerable<UserModel>> GetAllUsersAsync(string? sortType, string? searchingUser);
         public Task<UserModel> GetByIdAsync(int id);
+        public Task<IEnumerable<FileModel>> GetUserFilesAsync(int userId, string? sortType, string? searchingName);
     }
 }

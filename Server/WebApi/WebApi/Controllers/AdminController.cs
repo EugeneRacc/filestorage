@@ -77,5 +77,22 @@ namespace WebApi.Controllers
             }
             return Ok(customers);
         }
+
+        [HttpGet("users/{id}/files")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetFilesByName(string id, [FromQuery] string? sort, string? name)
+        {
+            IEnumerable<FileModel> resultFiles;
+            try
+            {
+                resultFiles = await _adminService.GetUserFilesAsync(int.Parse(id), sort, name);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+            return Ok(resultFiles);
+        }
+
     }
 }

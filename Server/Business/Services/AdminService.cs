@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Business.Exceptions;
 using Business.Interfaces;
 using Business.Models;
 using Data.Interfaces;
@@ -29,16 +30,25 @@ namespace Business.Services
 
         public async Task<IEnumerable<UserModel>> GetAllUsersAsync(string? sortType, string? searchingUser)
         {
-            var userFiles = await _userService.GetAllAsync();
-            if (userFiles == null)
+            var users = await _userService.GetAllAsync();
+            if (users == null)
             {
-                return null;
+                throw new FileStorageException("User not found");
             }
-            return SortUsers(userFiles, sortType, searchingUser);
+            return SortUsers(users, sortType, searchingUser);
         }
         public async Task<UserModel> GetByIdAsync(int id)
         {
             return await _userService.GetByIdAsync(id);
+        }
+
+        public async Task<IEnumerable<FileModel>> GetUserFilesAsync(int userId, string? sortType, string? searchingName)
+        {
+            var userFiles = (await _fileService.GetAllAsync())
+                .Where(x => x.UserId == userId);
+            if (userFiles == null)
+                throw new FileStorageException("Files not found");
+            return SortFiles(userFiles, sortType, searchingName);
         }
 
         private IEnumerable<UserModel> SortUsers(IEnumerable<UserModel> users, string? sortType, string? searchingUser)
@@ -53,6 +63,22 @@ namespace Business.Services
                     return users.Where(x => x.Email.Contains(searchingUser)).OrderBy(f => f.RoleName);
                 default:
                     return users.Where(x => x.Email.Contains(searchingUser));
+            }
+        }
+        private IEnumerable<FileModel> SortFiles(IEnumerable<FileModel> files, string? sortType, string? searchingName)
+        {
+            if (searchingName == null)
+                searchingName = "";
+            switch (sortType)
+            {
+                case "name":
+                    return files.Where(x => x.Name.Contains(searchingName)).OrderBy(f => f.Name);
+                case "type":
+                    return files.Where(x => x.Name.Contains(searchingName)).OrderBy(f => f.Type);
+                case "date":
+                    return files.Where(x => x.Name.Contains(searchingName)).OrderBy(f => f.Date);
+                default:
+                    return files.Where(x => x.Name.Contains(searchingName));
             }
         }
     }
