@@ -12,10 +12,8 @@ import AdminPanel from "./adminPanel/AdminPanel";
 import UserDetails from "./adminPanel/userList/user/UserDetails/UserDetails";
 
 
-
 function App() {
     const dispatch = useDispatch();
-
     useEffect(() => {
         dispatch(auth())
     }, [])

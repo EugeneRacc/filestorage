@@ -33,7 +33,6 @@ export function getUsers(sort, name){
 }
 
 export function getUserById(currentUser){
-
     return async dispatch => {
         try{
             const response = await axios.get(`https://localhost:44368/api/1.0/admin/users/${currentUser}`,
