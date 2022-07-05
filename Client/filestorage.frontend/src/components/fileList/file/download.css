@@ -1,0 +1,17 @@
+.download{
+    width: 25%;
+    height: 25%;
+    font-size: 25px;
+    font-weight: 700;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.download__icon {
+    width: 40px;
+    margin-left: 2%;
+    margin-top: 5px;
+}

@@ -70,20 +70,6 @@ namespace Data.Data
 
         public async Task SaveAsync(User user)
         {
-            // 
-            var local = _fileStorageDbContext.Set<User>()
-                .Local
-                .FirstOrDefault(entry => entry.Id.Equals(user.Id));
-
-            // check if local is not null 
-            if (local != null)
-            {
-                // detach
-                _fileStorageDbContext.Entry(local).State = EntityState.Detached;
-            }
-            // set Modified flag in your entry
-            _fileStorageDbContext.Entry(user).State = EntityState.Modified;
-
             await _fileStorageDbContext.SaveChangesAsync();
         }
     }

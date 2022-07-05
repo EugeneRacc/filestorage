@@ -140,12 +140,34 @@ namespace WebApi.Controllers
                 resultDownloadFile = _fileService.DownloadFileAsync(userId.Result, int.Parse(id)).Result;
                 return new FileContentResult(resultDownloadFile.Memory, resultDownloadFile.Extension)
                 {
-                    FileDownloadName = resultDownloadFile.FileName
+                    FileDownloadName = resultDownloadFile.FileName + "." + resultDownloadFile.Type
                 };
             }
             catch (Exception e)
             {
                 return null;
+            }
+        }
+
+        [HttpGet("share"), DisableRequestSizeLimit]
+        public IActionResult DownloadFileByLink([FromQuery] string link)
+        {
+            IEnumerable<FileModel> resultFiles;
+            DownloadFileModel resultDownloadFile;
+            try
+            {
+                resultDownloadFile = _fileService.DownloadFileByAccessLinkAsync(link).Result;
+                HttpContext.Response.Headers.Add("x-my-custom-header", $"{resultDownloadFile.FileName}.{resultDownloadFile.Type}");
+                return Ok(new FileContentResult(resultDownloadFile.Memory, resultDownloadFile.Extension)
+                {
+                   FileDownloadName = resultDownloadFile.FileName + "." + resultDownloadFile.Type
+                });
+                return Ok(resultDownloadFile.FileName);
+                
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
             }
         }
 

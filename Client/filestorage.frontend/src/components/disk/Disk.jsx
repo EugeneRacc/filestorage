@@ -7,7 +7,7 @@ import Popup from "./Popup";
 import {setCurrentDir, setPopupDisplay} from "../../reducers/fileReducer";
 
 import fileUploadLogo from "../../assets/icon/file_upload.svg";
-
+import {useNavigate} from "react-router-dom";
 const Disk = () => {
     const dispatch = useDispatch();
     const currentDir = useSelector(state => state.files.currentDir)
@@ -15,7 +15,9 @@ const Disk = () => {
     const dirStack = useSelector(state => state.files.dirStack)
     const [dragEnter, setDragEnter] = useState(false)
     const [sort, setSort] = useState('type')
-
+    const isAdmin = useSelector(state => state.user.currentUser.roleName) === "Admin"
+    const isCurrentUserNull = useSelector(state => state.users.currentUserId) !== null
+    const navigate = useNavigate()
     useEffect(() => {
         dispatch((getFiles(currentDir, sort)))
     }, [currentDir, sort]);
@@ -64,23 +66,36 @@ const Disk = () => {
         )
     }
 
+    function goBackToUserHandler() {
+
+        navigate("/user-details")
+    }
+
     return ( !dragEnter ?
         <div className="disk" onDragEnter={dragEnterHandler} onDragLeave={dragLeaveHandler} onDragOver={dragEnterHandler}>
             <div className="disk__btn">
-                <button className="disk__back" onClick={() => stepBackHandler()}>Back</button>
-                <button className="disk__create" onClick={() => showPopupHandler()}>Create Directory</button>
-                <div className="disk__upload">
+                {(isCurrentUserNull && isAdmin)?
+                    <button className="disk__back" onClick={() => goBackToUserHandler()}>Back to user</button>:
+                    <button className="disk__back" onClick={() => stepBackHandler()}>Back</button>}
+                {(!isCurrentUserNull)?
+                    <button className="disk__create" onClick={() => showPopupHandler()}>Create Directory</button>:
+                    <div></div>}
+                {(!isCurrentUserNull)?
+                    <div className="disk__upload">
                     <label htmlFor="disk__upload-input" className="disk__upload-label">
                         <img src={fileUploadLogo} alt="upload_file" className="disk__upload-img"/>
                         <p>File Upload</p></label>
                     <input multiple={true} onChange={(event) => fileUploadHandler(event)}
                         type="file" id="disk__upload-input" className="disk__upload-input" />
-                </div>
+                </div>:
+                    <div></div>}
+                {(!isCurrentUserNull)?
                 <select value={sort} onChange={(e) => setSort(e.target.value)} className="disk__select">
                     <option value="name">Sort by name</option>
                     <option value="type">Sort by type</option>
                     <option value="date">Sort by date</option>
-                </select>
+                </select>:
+                    <div></div>}
             </div>
             <FileList />
             <Popup />

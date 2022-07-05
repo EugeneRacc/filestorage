@@ -91,15 +91,27 @@ export async function downloadFile(file){
             }
         })
     if(response.status === 200){
-        const blob = await response.blob()
-        const downloadUrl = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
-        link.href = downloadUrl
-        link.download = file.name
-        document.body.appendChild(link)
-        link.click()
-        link.remove()
+        await DownloadClient(response, file);
     }
+}
+
+export async function downloadFileByAccessLink(link){
+    const data = await fetch(`https://localhost:44368/api/1.0/file/share?link=${link.split("/").slice(-1)}`)
+            .then(response => {
+                return response.json();
+            }).then(responseData => {
+                console.log(responseData);
+                return responseData;
+            })
+        const newResp = await fetch(`https://localhost:44368/api/1.0/file/share?link=${link.split("/").slice(-1)}`)
+        const blob = await newResp.blob()
+        const downloadUrl = window.URL.createObjectURL(blob)
+        const path = document.createElement('a')
+        path.href = downloadUrl
+        path.download = data.fileDownloadName
+        document.body.appendChild(path)
+        path.click()
+        path.remove()
 }
 
 export function deleteFile(file){
@@ -137,4 +149,16 @@ export function searchFiles(search){
             dispatch(hideLoader())
         }
     }
+}
+
+async function DownloadClient(){
+    const blob = await arguments[0].blob()
+    const downloadUrl = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = downloadUrl
+    link.download = arguments[1].name
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+
 }

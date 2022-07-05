@@ -29,8 +29,9 @@ const Popup = () => {
                     <div className="popup__title">Create new directory</div>
                     <button className="popup__close" onClick={() => closeHandler()}>X</button>
                 </div>
-                <Input type="text" placeholder="Name of new folder" value={dirName} setValue={setDirName}/>
+                <Input onChange={e => setDirName(e.target.value)} type="text" placeholder="Name of new folder" value={dirName} setValue={setDirName}/>
                 <button className="popup__create" onClick={() => createHandler()}>Create</button>
+
             </div>
         </div>
     );

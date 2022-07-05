@@ -1,7 +1,7 @@
 import axios from "axios";
 import {setUser} from "../reducers/userReducer";
 
-export const registration = async (email, password, confirmPassword) => {
+export const registration = async (email, password, confirmPassword, nav) => {
         if(confirmPassword !== password) {
             alert("Passwords aren't same");
             return;
@@ -13,10 +13,14 @@ export const registration = async (email, password, confirmPassword) => {
                 email,
                 password
             })
-        alert(response.data.message + "Correctly registered");
+        alert(response.data + "Correctly registered");
+        const timer = setTimeout(() => {
+            nav("/");
+        }, 1000);
+        return () => clearTimeout(timer);
     }
     catch (e){
-        alert(e.response.data.message + " smh went wrong");
+        alert(e.response.data + " smh went wrong");
     }
 }
 
@@ -33,7 +37,7 @@ export const login = (email, password) => {
                 localStorage.setItem('token', response.data.token);
                 console.log(response.data);
         } catch (e) {
-            alert(e.response.data.message + " smh went wrong");
+            alert(e.response.data + " smh went wrong");
         }
     }
 }
@@ -43,12 +47,12 @@ export const auth = () => {
         try {
             const response = await axios.get('https://localhost:44368/api/1.0/auth',
                 {headers:{Authorization:`Bearer ${localStorage.getItem('token')}`}})
-            //console.log(typeof response + " " + response)
-            dispatch(setUser(response.data.user));
+            console.log(response.data.user)
+            await dispatch(setUser(response.data.user));
             localStorage.setItem('token', response.data.token);
             console.log(response.data);
         } catch (e) {
-            alert(e.response.data.message + " smh went wrong");
+            console.log(e.response)
             localStorage.removeItem('token')
         }
     }

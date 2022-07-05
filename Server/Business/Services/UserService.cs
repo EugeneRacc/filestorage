@@ -38,6 +38,12 @@ namespace Business.Services
             var mappedCustomer = mapper.Map<UserModel>(customer);
             return mappedCustomer;
         }
+        public async Task<UserModel> GetByIdWithNoTrackingAsync(int id)
+        {
+            var customer = await db.UserRepository.GetByIdWithNoTrackAsync(id);
+            var mappedCustomer = mapper.Map<UserModel>(customer);
+            return mappedCustomer;
+        }
 
         public async Task<UserModel> GetByUserCredentials(UserLogin userLogin)
         {
@@ -72,8 +78,7 @@ namespace Business.Services
                 return;
             await db.UserRepository.AddAsync(customer);
             await db.SaveAsync();
-            new FileService(db, mapper, configuration).CreateDirWithAllInfo(
-                new FileModel { UserId = id, Name = $"{id}" });
+           
         }
 
         public async Task UpdateAsync(UserModel model)
@@ -81,10 +86,6 @@ namespace Business.Services
             if (model == null)
             {
                 throw new FileStorageException($"The user cannot be null {nameof(model)}");
-            }
-            if (model.Password.Length < 8)
-            {
-                throw new FileStorageException($"The user cannot have such an easy password {nameof(model)}");
             }
 
             db.UserRepository.Update(mapper.Map<User>(model));

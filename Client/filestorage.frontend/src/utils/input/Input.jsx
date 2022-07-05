@@ -1,12 +1,17 @@
 import React from 'react';
 import './input.css'
 
+
 const Input = (props) => {
+
     return (
-            <input onChange={(event)=>props.setValue(event.target.value)}
+            <input onChange={props.onChange}
                    value={props.value}
                    type={props.type}
-                   placeholder={props.placeholder}/>
+                   placeholder={props.placeholder}
+                   name={props.name}
+                   onBlur={props.onBlur}
+            />
     );
 };
 

@@ -98,6 +98,7 @@ namespace WebApi
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddControllers();
         }

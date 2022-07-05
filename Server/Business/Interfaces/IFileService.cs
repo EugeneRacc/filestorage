@@ -14,6 +14,7 @@ namespace Business.Interfaces
         public Task<IEnumerable<FileModel>> GetFilesByName(int userId, string fileName);
         public Task<FileModel> UploadFileAsync(int userId, string? parentId, IFormFile formFile);
         public Task<DownloadFileModel> DownloadFileAsync(int userId, int fileId);
+        public Task<DownloadFileModel> DownloadFileByAccessLinkAsync(string accessLink);
         public Task DeleteAsync(int modelId, int userId);
     }
 }

@@ -57,20 +57,6 @@ namespace Data.Repositories
 
         public void Update(User entity)
         {
-            // 
-            var local = _fileStorageDbContext.Set<User>()
-                .Local
-                .FirstOrDefault(entry => entry.Id.Equals(entity.Id));
-
-            // check if local is not null 
-            if (local != null)
-            {
-                // detach
-                _fileStorageDbContext.Entry(local).State = EntityState.Detached;
-            }
-            // set Modified flag in your entry
-            _fileStorageDbContext.Entry(entity).State = EntityState.Modified;
-
             EntityEntry entityEntry = _fileStorageDbContext.Entry<User>(entity);
             entityEntry.State = EntityState.Modified;
         }
@@ -90,6 +76,13 @@ namespace Data.Repositories
             var result = await _fileStorageDbContext.Users
                 .Include(f => f.Files)
                 .Include(ds => ds.DiskSpace)
+                .Include(r => r.Role)
+                .FirstOrDefaultAsync(u => u.Id == id);
+            return result;
+        }
+        public async Task<User> GetByIdWithNoTrackAsync(int id)
+        {
+            var result = await _fileStorageDbContext.Users.AsNoTracking()
                 .Include(r => r.Role)
                 .FirstOrDefaultAsync(u => u.Id == id);
             return result;

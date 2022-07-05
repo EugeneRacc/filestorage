@@ -12,12 +12,14 @@ namespace Business.Models
         public string Extension { get; set; }
         public byte[] Memory { get; set; }
         public string FileName { get; set; }
+        public string Type { get; set; }
 
         public DownloadFileModel (string ext, byte[] memory, string fileName)
         {
             Extension = GetMimeType()[ext];
             Memory = memory;
             FileName = fileName;
+            Type = ext;
         }
         private Dictionary<string, string> GetMimeType()
         {
@@ -34,6 +36,7 @@ namespace Business.Models
                 { "jpeg", "image/jpeg" },
                 { "gif", "image/gif" },
                 { "csv", "image/csv" },
+                { "xml", "application/xml" },
             };
         }
     }
