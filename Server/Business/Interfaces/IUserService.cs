@@ -8,5 +8,6 @@ namespace Business.Interfaces
     {
         public Task<bool> LogInAsync(UserModel model);
         public Task<UserModel> GetByUserCredentials(UserLogin login);
+        public Task<UserModel> GetByIdWithNoTrackingAsync(int id);
     }
 }

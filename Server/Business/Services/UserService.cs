@@ -38,6 +38,12 @@ namespace Business.Services
             var mappedCustomer = mapper.Map<UserModel>(customer);
             return mappedCustomer;
         }
+        public async Task<UserModel> GetByIdWithNoTrackingAsync(int id)
+        {
+            var customer = await db.UserRepository.GetByIdWithNoTrackAsync(id);
+            var mappedCustomer = mapper.Map<UserModel>(customer);
+            return mappedCustomer;
+        }
 
         public async Task<UserModel> GetByUserCredentials(UserLogin userLogin)
         {

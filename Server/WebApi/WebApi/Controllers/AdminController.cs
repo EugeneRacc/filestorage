@@ -95,19 +95,19 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("users")]
-        public async Task<ActionResult> Update([FromBody] UserModel value)
+        public async Task<ActionResult> Update([FromBody] UserForUpdateModel value)
         {
 
             try
             {
-                await _userService.UpdateAsync(value);
+                await _adminService.UpdateUserAsync(value);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest("Not found");
             }
 
-            return Ok(value);
+            return Ok("Success");
         }
 
     }

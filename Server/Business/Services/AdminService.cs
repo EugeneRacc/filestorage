@@ -50,7 +50,22 @@ namespace Business.Services
                 throw new FileStorageException("Files not found");
             return SortFiles(userFiles, sortType, searchingName);
         }
-
+        public async Task UpdateUserAsync(UserForUpdateModel model)
+        {
+            var userModel = await _userService.GetByIdWithNoTrackingAsync(model.Id);
+            if (userModel == null)
+                throw new FileStorageException("User was not found");
+            Data.Entities.Role role;
+            if (userModel.RoleId != null)
+            {
+                role = await _db.RoleRepository.GetByIdAsync((int)userModel.RoleId);
+                role.RoleName = model.RoleName;
+                _db.RoleRepository.Update(role);
+            }
+            userModel.RoleName = model.RoleName;
+            userModel.Email = model.Email;
+            await _userService.UpdateAsync(userModel);
+        }
         private IEnumerable<UserModel> SortUsers(IEnumerable<UserModel> users, string? sortType, string? searchingUser)
         {
             if (searchingUser == null)
@@ -81,5 +96,7 @@ namespace Business.Services
                     return files.Where(x => x.Name.Contains(searchingName));
             }
         }
+
+        
     }
 }
