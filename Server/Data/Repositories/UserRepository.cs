@@ -13,7 +13,6 @@ namespace Data.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly FileStorageDbContext _fileStorageDbContext;
-
         public UserRepository(FileStorageDbContext fileStorageDbContext)
         {
             _fileStorageDbContext = fileStorageDbContext;
@@ -33,7 +32,7 @@ namespace Data.Repositories
 
         public async Task AddAsync(User entity)
         {
-            await _fileStorageDbContext.Set<User>().AddAsync(entity);
+            await _fileStorageDbContext.Users.AddAsync(entity);
         }
 
         public void Delete(User entity)
@@ -48,10 +47,6 @@ namespace Data.Repositories
             if (entity != null)
             {
                 Delete(entity);
-            }
-            else
-            {
-                throw new NullReferenceException($"Entity with such an id isn't exist {nameof(entity)}");
             }
         }
 

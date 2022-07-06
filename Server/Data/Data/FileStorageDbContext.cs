@@ -7,7 +7,7 @@ namespace Data.Data
 {
     public class FileStorageDbContext : DbContext
     {
-        public FileStorageDbContext(DbContextOptions<FileStorageDbContext> options) : base(options) { }
+        public FileStorageDbContext(DbContextOptions options) : base(options) { }
 
         /*public FileStorageDbContext()
         {
