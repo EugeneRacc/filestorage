@@ -16,7 +16,8 @@ namespace Data.Tests
     {
         private readonly FileStorageDbContext _context;
         private readonly IUserRepository _repository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly SeedDb _seed;
+
         public UserRepositoryTests()
         {
             DbContextOptionsBuilder dbOptions = new DbContextOptionsBuilder()
@@ -25,7 +26,7 @@ namespace Data.Tests
                 );
             
             _context = new FileStorageDbContext(dbOptions.Options);
-            _unitOfWork = new UnitOfWork(_context);
+            _seed = new SeedDb(_context);
             _repository = new UserRepository(_context);
         }
         [Fact]
@@ -64,7 +65,7 @@ namespace Data.Tests
         [Fact]
         public async Task GetAllAsync_ShouldReturnTenUsers() {
             // Arrange
-            Seed();
+            _seed.Seed();
             int expectedLength = GetExpectedUsers().ToList().Count;
             var expected = GetExpectedUsers().ToList();
             //Act
@@ -79,7 +80,7 @@ namespace Data.Tests
         [Fact]
         public async Task GetAllAsync_ShouldReturnSameUsers() {
             // Arrange
-            Seed();
+            _seed.Seed();
             var expected = GetExpectedUsers().ToList();
             //Act
             var actual = (await _repository.GetAllAsync()).ToList();
@@ -94,7 +95,7 @@ namespace Data.Tests
         public async Task GetByIdAsync_ShouldReturnOneUserWithId1()
         {
             // Arrange
-            Seed();
+            _seed.Seed();
             var expectedUser = GetExpectedUsers().FirstOrDefault(x => x.Id == 1);
             //Act
             var resultUser = await _repository.GetByIdAsync(1);
@@ -109,7 +110,7 @@ namespace Data.Tests
         public async Task GetByIdAsync_WithNotExistingUser_ShouldReturnNull()
         {
             // Arrange
-            Seed();
+            _seed.Seed();
             var expectedUser = GetExpectedUsers().FirstOrDefault(x => x.Id == 100);
             //Act
             var resultUser = await _repository.GetByIdAsync(100);
@@ -122,7 +123,7 @@ namespace Data.Tests
         public async Task Delete_ByUserId_ShouldDeleteUserFromDB()
         {
             // Arrange
-            Seed();
+            _seed.Seed();
             var expectedLength = GetExpectedUsers().ToList().Count - 1;
 
             //Act
@@ -137,7 +138,7 @@ namespace Data.Tests
         public async Task DeleteByIdAsync_ByNotExistingId_ShouldPassAndNotDeleteUser()
         {
             // Arrange
-            Seed();
+            _seed.Seed();
             var expectedLength = GetExpectedUsers().ToList().Count;
 
             //Act
@@ -151,7 +152,7 @@ namespace Data.Tests
         public async Task Delete_ByUserModel_ShouldDeleteUserFromDB()
         {
             // Arrange
-            Seed();
+            _seed.Seed();
             var expectedLength = GetExpectedUsers().ToList().Count - 1;
 
             //Act
@@ -166,7 +167,7 @@ namespace Data.Tests
         public async Task GetAllAsyncWithDetails_ShouldReturnTenUsers()
         {
             // Arrange
-            Seed();
+            _seed.Seed();
             var expected = GetExpectedUsers().ToList();
             //Act
             var actual = (await _repository.GetAllWithDetailsAsync()).ToList();
@@ -175,46 +176,6 @@ namespace Data.Tests
 
             Assert.True(new UserEqualityComparer().Equals(expected[0], actual[0]));
 
-        }
-
-        private void Seed()
-        {
-            var users = new List<User>()
-            {
-                new User{Id = 1, Email = "email", Password = "password", UsedDiskSpade = "0"},
-                new User{Id = 2, Email = "email2", Password = "password", UsedDiskSpade = "0"},
-                new User{Id = 3, Email = "email3", Password = "password", UsedDiskSpade = "0"},
-                new User{Id = 4, Email = "email4", Password = "password", UsedDiskSpade = "0"},
-                new User{Id = 5, Email = "email5", Password = "password", UsedDiskSpade = "0"},
-                new User{Id = 6, Email = "email6", Password = "password", UsedDiskSpade = "0"},
-                new User{Id = 7, Email = "email7", Password = "password", UsedDiskSpade = "0"},
-                new User{Id = 8, Email = "email8", Password = "password", UsedDiskSpade = "0"},
-                new User{Id = 9, Email = "email9", Password = "password", UsedDiskSpade = "0"},
-                new User{Id = 10, Email = "email10", Password = "password", UsedDiskSpade = "0"},
-            };
-            var roles = new List<Role>()
-            {
-                new Role {Id = 1, RoleName = "Admin"},
-                new Role {Id = 2, RoleName = "User"},
-            };
-            var files = new List<File>()
-            {
-                new File {Id = 1, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                new File {Id = 2, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                new File {Id = 3, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                new File {Id = 4, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                new File {Id = 5, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-            };
-            var diskSpace = new List<DiskSpace>()
-            {
-                new DiskSpace { Id = 1, AvailableDiskSpace = "9030904932"},
-                new DiskSpace { Id = 2, AvailableDiskSpace = "4334"},
-            };
-            _context.Users.AddRange(users);
-            _context.Roles.AddRange(roles);
-            _context.Files.AddRange(files);
-            _context.UserDiskSpaces.AddRange(diskSpace);
-            _context.SaveChanges();
         }
 
         private IEnumerable<User> GetExpectedUsers()

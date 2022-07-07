@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
-
     public class UserService : IUserService
     {
         private readonly IUnitOfWork db;
@@ -25,6 +24,11 @@ namespace Business.Services
             this.mapper = mapper;
             this.configuration = configuration;
         }
+        public UserService(IUnitOfWork uow, IMapper mapper)
+        {
+            db = uow;
+            this.mapper = mapper;
+        }
         public async Task<IEnumerable<UserModel>> GetAllAsync()
         {
             var customers = await db.UserRepository.GetAllWithDetailsAsync();
@@ -34,9 +38,16 @@ namespace Business.Services
 
         public async Task<UserModel> GetByIdAsync(int id)
         {
-            var customer = await db.UserRepository.GetByIdWithDetailsAsync(id);
-            var mappedCustomer = mapper.Map<UserModel>(customer);
-            return mappedCustomer;
+            try
+            {
+                var customer = await db.UserRepository.GetByIdWithDetailsAsync(id);
+                var mappedCustomer = mapper.Map<UserModel>(customer);
+                return mappedCustomer;
+            }
+            catch (Exception)
+            {
+                throw new FileStorageException("No such user in db");
+            }
         }
         public async Task<UserModel> GetByIdWithNoTrackingAsync(int id)
         {
@@ -47,11 +58,18 @@ namespace Business.Services
 
         public async Task<UserModel> GetByUserCredentials(UserLogin userLogin)
         {
-            userLogin.Password = MD5Hash.GetMD5Hash(userLogin.Password);
-            var user = (await db.UserRepository.GetAllWithDetailsAsync()).FirstOrDefault(u =>
-            u.Email.ToLower() == userLogin.Email.ToLower() && u.Password == userLogin.Password);
-            var mappedUser = mapper.Map<UserModel>(user);
-            return mappedUser;
+            try
+            {
+                userLogin.Password = MD5Hash.GetMD5Hash(userLogin.Password);
+                var user = (await db.UserRepository.GetAllWithDetailsAsync()).FirstOrDefault(u =>
+                u.Email.ToLower() == userLogin.Email.ToLower() && u.Password == userLogin.Password);
+                var mappedUser = mapper.Map<UserModel>(user);
+                return mappedUser;
+            }
+            catch (NullReferenceException)
+            {
+                throw new FileStorageException("User not found");
+            }
         }
         public async Task AddAsync(UserModel model)
         {
@@ -98,7 +116,7 @@ namespace Business.Services
             var user = (await GetAllAsync()).FirstOrDefault(x => x.Email == model.Email);
             if (user == null)
             {
-                throw new NullReferenceException($"User with such email not found {model.Email}");
+                throw new FileStorageException($"User with such email not found {model.Email}");
             }
 
             bool isPasswordValid = user.Password.Equals(MD5Hash.GetMD5Hash(model.Password));
