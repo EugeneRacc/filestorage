@@ -33,7 +33,7 @@ namespace Business.Tests
         }
 
         [Fact]
-        public async Task GetAllAsync_ShouldReturnAllUserModels()
+        public async Task GetAllAsync_ShouldReturnAllFileModels()
         {
             //Arrange
             var expected = GetTestFileModels;
@@ -232,6 +232,242 @@ namespace Business.Tests
 
         }
 
+        [Fact]
+        public async Task GetFilesByParentIdAsync_WithCorrectUserId_ShouldReturnAllUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: null)).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByParentIdAsync_WithInCorrectUserId_ShouldReturnAllUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 100;
+            List<FileModel> expected = new List<FileModel>();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: null)).ToList();
+
+            //assert
+            Assert.Equal(expected, actual);
+
+        }
+
+        [Fact]
+        public async Task GetFilesByParentIdAsync_WithCorrectUserIdAndSortTypeByDate_ShouldReturnAllSortedUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Date).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: "date")).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByParentIdAsync_WithCorrectUserIdAndSortTypeByName_ShouldReturnAllSortedUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Name).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: "name")).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByParentIdAsync_WithCorrectUserIdAndSortTypeByType_ShouldReturnAllSortedUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Type).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: "type")).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByParentIdAsync_WithCorrectUserIdAndWithNoSuchTypeOfSort_ShouldReturnAllSortedUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: "fdsfds")).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByParentIdAsync_WithCorrectUserIdAndWithSortAndPerentId_ShouldReturnAllSortedUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expectedParentId = 1;
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId && x.ParentId == expectedParentId).OrderBy(y => y.Date).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: expectedParentId, sortType: "date")).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByUserIdAsync_WithCorrectUserId_ShouldReturnAllUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByUserIdAsync(userId: expectedUserId,sortType: null)).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByUserIdAsync_WithInCorrectUserId_ShouldReturnAllUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 100;
+            List<FileModel> expected = new List<FileModel>();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByUserIdAsync(userId: expectedUserId, sortType: null)).ToList();
+
+            //assert
+            Assert.Equal(expected, actual);
+
+        }
+
+        [Fact]
+        public async Task GetFilesByUserIdAsync_WithCorrectUserIdAndSortTypeByDate_ShouldReturnAllSortedUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Date).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByUserIdAsync(userId: expectedUserId, sortType: "date")).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByUserIdAsync_WithCorrectUserIdAndSortTypeByName_ShouldReturnAllSortedUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Name).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByUserIdAsync(userId: expectedUserId, sortType: "name")).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByName_WithCorrectUserIdAndExistingFileName_ShouldReturnAllUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expectedName = "1";
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId && x.Name.Contains(expectedName)).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByName(userId: expectedUserId, expectedName)).ToList();
+
+            //assert
+            Assert.True(new FileModelEqualityComparer().Equals(expected, actual));
+
+        }
+
+        [Fact]
+        public async Task GetFilesByName_WithInCorrectUserIdAndWithoutExistingFileName_ShouldReturnAllUserFileModels()
+        {
+            //Arrange
+            var expectedUserId = 1;
+            var expectedName = "2";
+            var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId && x.Name.Contains(expectedName)).ToList();
+            _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
+                .Returns(ReturnFiles());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+
+            //act
+            var actual = (await userService.GetFilesByName(userId: expectedUserId, expectedName)).ToList();
+
+            //assert
+            Assert.Equal(expected, actual);
+
+        }
         #region HelpData
 
         private async Task<IEnumerable<File>> ReturnFiles()
@@ -239,7 +475,7 @@ namespace Business.Tests
             return new List<File>()
             {
                 new File {Id = 1, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                new File {Id = 2, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
+                new File {Id = 2, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = 1, Path = "", Date = DateTime.Now},
                 new File {Id = 3, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
                 new File {Id = 4, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
                 new File {Id = 5, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
@@ -249,7 +485,7 @@ namespace Business.Tests
            new List<FileModel>()
             {
                 new FileModel {Id = 1, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                new FileModel {Id = 2, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
+                new FileModel {Id = 2, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = 1, Path = "", Date = DateTime.Now},
                 new FileModel {Id = 3, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
                 new FileModel {Id = 4, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
                 new FileModel {Id = 5, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
