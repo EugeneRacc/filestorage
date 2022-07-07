@@ -7,7 +7,9 @@ using Data.Enum;
 
 namespace Business.Models
 {
-
+    /// <summary>
+    /// User Model
+    /// </summary>
     public class UserModel
     {
         public int Id { get; set; }

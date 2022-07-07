@@ -13,12 +13,14 @@ using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// Controller with all admin methods
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
-    //[ApiVersionNeutral]
     [Produces("application/json")]
     [Route("api/{version:apiVersion}/[controller]")]
-    //[Route("api/[controller]")]
     [ApiController]
     public class AdminController : Controller
     {
@@ -59,6 +61,11 @@ namespace WebApi.Controllers
             return Ok(customers);
         }
 
+        /// <summary>
+        /// Gets the UserModel by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>User Models</returns>
         [HttpGet("users/{id}")]
         [Authorize(Roles = "Admin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -78,8 +85,18 @@ namespace WebApi.Controllers
             return Ok(customers);
         }
 
+        /// <summary>
+        /// Gets files with needed name.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="sort">The sort.</param>
+        /// <param name="name">The name.</param>
+        /// <returns>File Models</returns>
         [HttpGet("users/{id}/files")]
         [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetFilesByName(string id, [FromQuery] string? sort, string? name)
         {
             IEnumerable<FileModel> resultFiles;
@@ -93,8 +110,16 @@ namespace WebApi.Controllers
             }
             return Ok(resultFiles);
         }
-
+        /// <summary>
+        /// Updates the specified value.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>String about success</returns>
         [HttpPut("users")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Update([FromBody] UserForUpdateModel value)
         {
 

@@ -15,7 +15,10 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
-
+    /// <summary>
+    /// Class with all business logic for working with files
+    /// </summary>
+    /// <seealso cref="Business.Interfaces.IFileService" />
     public class FileService : IFileService
     {
         private readonly IUnitOfWork _db;
@@ -29,25 +32,42 @@ namespace Business.Services
             _configuration = configuration;
             _userService = new UserService(uow, mapper, configuration);
         }
+        public FileService(IUnitOfWork uow, IMapper mapper)
+        {
+            _db = uow;
+            this._mapper = mapper;
+        }
 
         public async Task<IEnumerable<FileModel>> GetAllAsync()
         {
-            var files = await _db.FileRepository.GetAllWithDetailsAsync();
-            var mappedfiles = _mapper.Map<IEnumerable<Data.Entities.File>, IEnumerable<FileModel>>(files);
-            return mappedfiles;
+                var files = await _db.FileRepository.GetAllWithDetailsAsync();
+                var mappedfiles = _mapper.Map<IEnumerable<Data.Entities.File>, IEnumerable<FileModel>>(files);
+                return mappedfiles;
+            
         }
 
         public async Task<FileModel> GetByIdAsync(int id)
         {
-            var file = await _db.FileRepository.GetByIdAsync(id);
-            var mappedfile = _mapper.Map<Data.Entities.File, FileModel>(file);
-            return mappedfile;
+            try
+            {
+                var file = await _db.FileRepository.GetByIdAsync(id);
+                var mappedfile = _mapper.Map<Data.Entities.File, FileModel>(file);
+                return mappedfile;
+            }
+            catch (NullReferenceException)
+            {
+                throw new FileStorageException("No such a file");
+            }
         }
         public async Task<FileModel> GetByModelAsync(FileModel model)
         {
             var files = await GetAllAsync();
             var result = files.FirstOrDefault(x => x.Name == model.Name && x.UserId == model.UserId && x.Type == model.Type 
             && x.ParentId == model.ParentId && x.Path == model.Path);
+            if(result == null)
+            {
+                throw new FileStorageException("No such a file");
+            }
             return result;
         }
 

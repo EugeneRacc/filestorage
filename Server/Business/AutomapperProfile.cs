@@ -5,6 +5,10 @@ using System.Linq;
 
 namespace Business
 {
+    /// <summary>
+    /// Configuration for mapping models
+    /// </summary>
+    /// <seealso cref="AutoMapper.Profile" />
     public class AutomapperProfile : Profile
     {
         public AutomapperProfile()
@@ -27,13 +31,6 @@ namespace Business
                 .ForMember(um => um.ChildFileIds, u
                     => u.MapFrom(src => src.ChildFiles.Where(x => x.ParentId != null).Select(y => y.Id)))
                 .ReverseMap();
-            /*CreateMap<UserModel, User>()
-                .ForMember(ur => ur.RoleId, u =>
-                u.MapFrom(src => src.Role == "Admin" ? 1 : 2))
-                .ForMember(uds => uds.UsedDiskSpade, u =>
-                u.MapFrom(src => src.UsedDiskSpace));
-                //.ForMember(uf => uf.Files.Where(z => z.UserId == z.User.Id).Select(x => x.Id)), u =>
-                //u.MapFrom(src => src.FilesIds));*/
         }
     }
 }

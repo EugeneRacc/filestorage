@@ -13,7 +13,6 @@ namespace Data.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly FileStorageDbContext _fileStorageDbContext;
-
         public UserRepository(FileStorageDbContext fileStorageDbContext)
         {
             _fileStorageDbContext = fileStorageDbContext;
@@ -33,7 +32,7 @@ namespace Data.Repositories
 
         public async Task AddAsync(User entity)
         {
-            await _fileStorageDbContext.Set<User>().AddAsync(entity);
+            await _fileStorageDbContext.Users.AddAsync(entity);
         }
 
         public void Delete(User entity)
@@ -49,10 +48,6 @@ namespace Data.Repositories
             {
                 Delete(entity);
             }
-            else
-            {
-                throw new NullReferenceException($"Entity with such an id isn't exist {nameof(entity)}");
-            }
         }
 
         public void Update(User entity)
@@ -60,7 +55,10 @@ namespace Data.Repositories
             EntityEntry entityEntry = _fileStorageDbContext.Entry<User>(entity);
             entityEntry.State = EntityState.Modified;
         }
-
+        /// <summary>
+        /// Gets all with details asynchronous.
+        /// </summary>
+        /// <returns>Return Users with detail info about other Entities</returns>
         public async Task<IEnumerable<User>> GetAllWithDetailsAsync()
         {
             var result = await _fileStorageDbContext.Users
@@ -70,7 +68,11 @@ namespace Data.Repositories
                 .ToListAsync();
             return result;
         }
-
+        /// <summary>
+        /// Gets the by identifier with details asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Return User with detail info about other Entities</returns>
         public async Task<User> GetByIdWithDetailsAsync(int id)
         {
             var result = await _fileStorageDbContext.Users
@@ -80,6 +82,11 @@ namespace Data.Repositories
                 .FirstOrDefaultAsync(u => u.Id == id);
             return result;
         }
+        /// <summary>
+        /// Gets the by identifier with no track asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Return Users with no tracking in cache</returns>
         public async Task<User> GetByIdWithNoTrackAsync(int id)
         {
             var result = await _fileStorageDbContext.Users.AsNoTracking()

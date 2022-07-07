@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Business.Models
 {
+    /// <summary>
+    /// Model with credentials for Log In
+    /// </summary>
     public class UserLogin
     {
         public string Email { get; set; }
-
         public string Password { get; set; }
     }
 }

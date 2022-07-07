@@ -15,12 +15,14 @@ using Microsoft.Extensions.Configuration;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// Controller for working with users
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
-    //[ApiVersionNeutral]
     [Produces("application/json")]
     [Route("api/{version:apiVersion}/[controller]")]
-    //[Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -29,31 +31,14 @@ namespace WebApi.Controllers
         {
             _userService = new UserService(uow, mapper, configuration);
         }
-        
-        [HttpGet("Admins")]
-        [Authorize(Roles = "User")]
-        public ActionResult AdminEndpoint()
-        {
-            var currentUser = GetCurrentUser();
-            return Ok($"Hi {currentUser.Email}, you are an {currentUser.RoleName}");
-        }
-
-        private UserModel GetCurrentUser()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if(identity != null)
-            {
-                var userClaims = identity.Claims;
-                return new UserModel
-                {
-                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
-                    RoleName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
-                };
-            }
-            return null;
-        }
-
+        /// <summary>
+        /// Gets the User by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>User</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserModel>> GetById(int id)
         {
             UserModel resultCustomer;
@@ -71,8 +56,14 @@ namespace WebApi.Controllers
             }
             return Ok(resultCustomer);
         }
-
+        /// <summary>
+        /// Adds new User.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>Info about user</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Add([FromBody] UserModel value)
         {
             try
@@ -85,8 +76,15 @@ namespace WebApi.Controllers
             }
             return CreatedAtAction(nameof(Add), new { id = value.Id }, value);
         }
-
+        /// <summary>
+        /// Updates the specified user with needed ID.
+        /// </summary>
+        /// <param name="Id">The identifier.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>String with success</returns>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Update(int Id, [FromBody] UserModel value)
         {
 
@@ -99,10 +97,16 @@ namespace WebApi.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok("Success");
         }
-
+        /// <summary>
+        /// Deletes the User with specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>String about success</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)] 
         public async Task<ActionResult> Delete(int id)
         {
             try
@@ -113,7 +117,21 @@ namespace WebApi.Controllers
             {
                 return BadRequest();
             }
-            return Ok();
+            return Ok("Success");
+        }
+        private UserModel GetCurrentUser()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+                return new UserModel
+                {
+                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value,
+                    RoleName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
+                };
+            }
+            return null;
         }
 
     }

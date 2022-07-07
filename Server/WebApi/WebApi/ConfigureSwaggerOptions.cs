@@ -8,7 +8,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace WebApi
 {
-
+    /// <summary>
+    /// Configuration for swagger
+    /// </summary>
+    /// <seealso cref="Microsoft.Extensions.Options.IConfigureOptions&lt;Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions&gt;" />
     public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
     {
         private readonly IApiVersionDescriptionProvider _provider;

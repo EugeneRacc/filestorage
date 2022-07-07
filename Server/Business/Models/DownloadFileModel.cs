@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Business.Models
 {
+    /// <summary>
+    /// Model with all info for creating FileContentResult
+    /// </summary>
     public class DownloadFileModel
     {
         public string Extension { get; set; }
@@ -21,6 +24,10 @@ namespace Business.Models
             FileName = fileName;
             Type = ext;
         }
+        /// <summary>
+        /// Gets the type of the MIME for downloading file.
+        /// </summary>
+        /// <returns>Dictionary with all popular MIMEs</returns>
         private Dictionary<string, string> GetMimeType()
         {
             return new Dictionary<string, string>

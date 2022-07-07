@@ -8,14 +8,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Data
 {
+    /// <summary>
+    /// Class for working with Repositories in easier way
+    /// </summary>
+    /// <seealso cref="Data.Interfaces.IUnitOfWork" />
     public class UnitOfWork : IUnitOfWork
     {
+        /// <summary>
+        /// The file storage database context
+        /// </summary>
         private readonly FileStorageDbContext _fileStorageDbContext;
+        /// <summary>
+        /// The disk space repository
+        /// </summary>
         private IDiskSpaceRepository _diskSpaceRepository;
+        /// <summary>
+        /// The file repository
+        /// </summary>
         private IFileRepository _fileRepository;
+        /// <summary>
+        /// The role repository
+        /// </summary>
         private IRoleRepository _roleRepository;
+        /// <summary>
+        /// The user repository/
+        /// </summary>
         private IUserRepository _userRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
+        /// </summary>
+        /// <param name="fileStorageDbContext">The file storage database context.</param>
         public UnitOfWork(FileStorageDbContext fileStorageDbContext)
         {
             _fileStorageDbContext = fileStorageDbContext;
@@ -62,12 +85,18 @@ namespace Data.Data
                 return _userRepository;
             }
         }
+        /// <summary>
+        /// Saves the asynchronous.
+        /// </summary>
         public async Task SaveAsync()
         {
             
             await _fileStorageDbContext.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Saves with User the asynchronous.
+        /// </summary>
+        /// <param name="user">The user.</param>
         public async Task SaveAsync(User user)
         {
             await _fileStorageDbContext.SaveChangesAsync();

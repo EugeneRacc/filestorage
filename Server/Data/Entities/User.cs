@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Entities
 {
+    /// <summary>
+    /// Class for creating User Table in DB
+    /// </summary>
+    /// <seealso cref="Data.Entities.BaseEntity" />
     [Index(nameof(Email), IsUnique=true)]
     public class User : BaseEntity
     {

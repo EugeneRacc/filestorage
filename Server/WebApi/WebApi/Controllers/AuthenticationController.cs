@@ -19,7 +19,10 @@ using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
-
+    /// <summary>
+    /// Controller for authenticating 
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/{version:apiVersion}")]
     [ApiController]
     public class AuthenticationController : ControllerBase
@@ -31,8 +34,14 @@ namespace WebApi.Controllers
             _configuration = config;
             _userService = new UserService(uow, mapper, config);
         }
-
+        /// <summary>
+        /// Register the new user into DB.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>Model that was been created</returns>
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Add([FromBody] UserModel value)
         {
             try
@@ -45,9 +54,15 @@ namespace WebApi.Controllers
             }
             return CreatedAtAction(nameof(Add), value);
         }
-
+        /// <summary>
+        /// Logs in into app.
+        /// </summary>
+        /// <param name="value">Model with user credentials.</param>
+        /// <returns>JWT token and UserInfo</returns>
         [AllowAnonymous]
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> LogIn([FromBody] UserLogin value)
         {
             var user = Authenticate(value);
@@ -59,9 +74,11 @@ namespace WebApi.Controllers
                 user.Result.Password = null;
                 CreateUserFolder(user.Result);
                 return Ok(new { token, user = user.Result });
-          
-            return NotFound("User not found");
         }
+        /// <summary>
+        /// Logs in by token.
+        /// </summary>
+        /// <returns>New token and User Info</returns>
         [AllowAnonymous]
         [HttpGet("auth")]
         public async Task<ActionResult> LogInByToken() 
