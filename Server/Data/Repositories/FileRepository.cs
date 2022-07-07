@@ -29,6 +29,10 @@ namespace Data.Repositories
             var file = await _fileStorageDbContext.Set<File>().FindAsync(id);
             return file;
         }
+        /// <summary>
+        /// Gets all with details asynchronous.
+        /// </summary>
+        /// <returns>File with details about User and Disk space</returns>
         public async Task<IEnumerable<File>> GetAllWithDetailsAsync()
         {
             var result = await _fileStorageDbContext.Files

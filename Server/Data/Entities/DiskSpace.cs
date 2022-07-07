@@ -6,7 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Entities
 {
-    //[Index(nameof(UserId), IsUnique = true)]
+    /// <summary>
+    /// Class for creating DB table by ef
+    /// </summary>
+    /// <seealso cref="Data.Entities.BaseEntity" />
     public class DiskSpace : BaseEntity
     {
         public string AvailableDiskSpace { get; set; }

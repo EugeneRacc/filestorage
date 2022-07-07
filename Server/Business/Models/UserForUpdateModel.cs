@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Business.Models
 {
+    /// <summary>
+    /// Model for updating User with Properties that can be updated
+    /// </summary>
     public class UserForUpdateModel
     {
         public int Id { get; set; }

@@ -13,6 +13,10 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
+    /// <summary>
+    /// Class with all business logic for working with Users
+    /// </summary>
+    /// <seealso cref="Business.Interfaces.IUserService" />
     public class UserService : IUserService
     {
         private readonly IUnitOfWork db;

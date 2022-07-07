@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace Data.Interfaces
 {
+    /// <summary>
+    /// Interface for using DI for UnitOfWork
+    /// </summary>
     public interface IUnitOfWork
     {
         IDiskSpaceRepository DiskSpaceRepository { get; }

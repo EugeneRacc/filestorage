@@ -15,7 +15,10 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
-
+    /// <summary>
+    /// Class with all business logic for working with files
+    /// </summary>
+    /// <seealso cref="Business.Interfaces.IFileService" />
     public class FileService : IFileService
     {
         private readonly IUnitOfWork _db;

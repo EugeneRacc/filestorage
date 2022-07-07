@@ -5,22 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Data.Data
 {
+    /// <summary>
+    /// Class for setting DB
+    /// </summary>
+    /// <seealso cref="Microsoft.EntityFrameworkCore.DbContext" />
     public class FileStorageDbContext : DbContext
     {
         public FileStorageDbContext(DbContextOptions options) : base(options) { }
 
-        /*public FileStorageDbContext()
-        {
-            
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(
-                //@"Server=localhost,1433;Database=ms-sql-server;User=sa;Password=Docker@123;");
-                @"Server=.;Database=FileStorage;Trusted_Connection=True;");
-        }*/
-        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -50,10 +42,6 @@ namespace Data.Data
             modelBuilder.Entity<File>()
                 .Property(u => u.AccessLink)
                 .HasDefaultValueSql("HASHBYTES('MD5', CAST(getdate() AS nvarchar(50)))");
-            //modelBuilder.Entity<File>()
-            //  .HasOne(e => e.FileFolder)
-            // .WithMany()
-            //  .HasForeignKey(p => p.ChildId);
             modelBuilder.Entity<File>()
                 .HasMany(e => e.ChildFiles)
                 .WithOne(x => x.FileFolder)

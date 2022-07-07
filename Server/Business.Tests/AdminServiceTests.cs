@@ -287,24 +287,6 @@ namespace Business.Tests
                 new User{Id = 10, Email = "email10", Password = "5f4dcc3b5aa765d61d8327deb882cf99", UsedDiskSpade = "0"},
             };
         }
-        private async Task<User> GetOneUser()
-        {
-            return
-                new User
-                {
-                    Id = 1,
-                    Email = "email",
-                    Password = "5f4dcc3b5aa765d61d8327deb882cf99",
-                    UsedDiskSpade = "0",
-                    Files = new Collection<File>(){
-                    new File {Id = 1, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                    new File {Id = 2, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                    new File {Id = 3, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                    new File {Id = 4, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                    new File {Id = 5, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
-                    }
-                };
-        }
         private async Task<IEnumerable<File>> ReturnFiles()
         {
             return new List<File>()

@@ -15,6 +15,10 @@ using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// Controller for working with Files
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
     [Route("api/{version:apiVersion}/[controller]")]
     [ApiController]
     public class FileController : ControllerBase
@@ -26,9 +30,17 @@ namespace WebApi.Controllers
             _fileService = new FileService(uow, mapper, configuration);
             _userService = new UserService(uow, mapper, configuration);
         }
-
+        /// <summary>
+        /// Creates the directory for user.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>File Model of new directory</returns>
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateDirectory([FromBody] FileModel model)
         {
             FileModel result;
@@ -45,9 +57,17 @@ namespace WebApi.Controllers
             }
             return Ok(result);
         }
-
+        /// <summary>
+        /// Gets the files after sorting.
+        /// </summary>
+        /// <param name="sortType">Type of the sort.</param>
+        /// <returns></returns>
         [HttpGet]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetFiles([FromQuery] string? sortType)
         {
             IEnumerable<FileModel> resultFiles;
@@ -64,9 +84,17 @@ namespace WebApi.Controllers
             return Ok(resultFiles);
         }
 
-
+        /// <summary>
+        /// Get file with needed File Name
+        /// </summary>
+        /// <param name="fileName">Name of the file.</param>
+        /// <returns>File</returns>
         [HttpGet("filter")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetFilesByName([FromQuery] string? fileName)
         {
             IEnumerable<FileModel> resultFiles;
@@ -87,11 +115,18 @@ namespace WebApi.Controllers
             }
             return Ok(resultFiles);
         }
-
-
-
+        /// <summary>
+        /// Gets the files that are saved in directory with parent identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="sortType">Type of the sort.</param>
+        /// <returns>List of files</returns>
         [HttpGet("{id}")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetFilesWithParentId(string id, [FromQuery] string? sortType)
         {
             IEnumerable<FileModel> resultFiles;
@@ -108,9 +143,18 @@ namespace WebApi.Controllers
             return Ok(resultFiles);
         }
 
-        
+        /// <summary>
+        /// Uploads the file into db and locally server.
+        /// </summary>
+        /// <param name="uploadedFile">The uploaded file.</param>
+        /// <param name="parentId">The parent identifier.</param>
+        /// <returns>Info about new file</returns>
         [HttpPost("upload"), DisableRequestSizeLimit]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UploadFile([FromForm] IFormFile uploadedFile, [FromForm]string? parentId)
         {
             FileModel addedlFile;
@@ -120,15 +164,23 @@ namespace WebApi.Controllers
                 var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
                 addedlFile = await _fileService.UploadFileAsync(user.Result, parentId, uploadedFile);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest();
             }
             return Ok(addedlFile);
         }
-
+        /// <summary>
+        /// Downloads the file.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Blob for downloading file</returns>
         [HttpGet("download"), DisableRequestSizeLimit]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public FileContentResult DownloadFile([FromQuery] string id)
         {
             IEnumerable<FileModel> resultFiles;
@@ -143,13 +195,21 @@ namespace WebApi.Controllers
                     FileDownloadName = resultDownloadFile.FileName + "." + resultDownloadFile.Type
                 };
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
         }
-
+        /// <summary>
+        /// Downloads the file by access link.
+        /// </summary>
+        /// <param name="link">The link.</param>
+        /// <returns>Blob for downloading file</returns>
         [HttpGet("share"), DisableRequestSizeLimit]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public IActionResult DownloadFileByLink([FromQuery] string link)
         {
             IEnumerable<FileModel> resultFiles;
@@ -165,14 +225,22 @@ namespace WebApi.Controllers
                 return Ok(resultDownloadFile.FileName);
                 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest();
             }
         }
-
+        /// <summary>
+        /// Deletes the specified file by identifier.
+        /// </summary>
+        /// <param name="modelId">The model identifier.</param>
+        /// <returns>String about success</returns>
         [HttpDelete]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> Delete([FromQuery] string modelId)
         {
             try

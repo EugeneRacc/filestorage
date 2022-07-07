@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Business.Models
 {
-
+    /// <summary>
+    /// File Model
+    /// </summary>
     public class FileModel
-    {
-        //TODO add business logic to FileModel
+    { 
         public int Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }

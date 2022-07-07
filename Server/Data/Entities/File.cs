@@ -5,6 +5,10 @@ using System.Numerics;
 
 namespace Data.Entities
 {
+    /// <summary>
+    /// Class for creating File table in Db
+    /// </summary>
+    /// <seealso cref="Data.Entities.BaseEntity" />
     public class File : BaseEntity
     {
         public string Name { get; set; }

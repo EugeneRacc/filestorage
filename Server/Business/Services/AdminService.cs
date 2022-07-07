@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Business.Services
 {
+    /// <summary>
+    /// Class with all business logic of Admin
+    /// </summary>
     public class AdminService : IAdminService
     {
         private readonly IUnitOfWork _db;

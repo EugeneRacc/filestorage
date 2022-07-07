@@ -9,10 +9,20 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Data.Repositories
 {
+    /// <summary>
+    /// Class with CRUD methods for working with DiskSpace
+    /// </summary>
+    /// <seealso cref="Data.Interfaces.IDiskSpaceRepository" />
     public class DiskSpaceRepository : IDiskSpaceRepository
     {
+        /// <summary>
+        /// The file storage database context
+        /// </summary>
         private readonly FileStorageDbContext _fileStorageDbContext;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiskSpaceRepository"/> class.
+        /// </summary>
+        /// <param name="fileStorageDbContext">The file storage database context.</param>
         public DiskSpaceRepository(FileStorageDbContext fileStorageDbContext)
         {
             _fileStorageDbContext = fileStorageDbContext;
@@ -22,7 +32,6 @@ namespace Data.Repositories
             var diskSpaces = await _fileStorageDbContext.Set<DiskSpace>().ToListAsync();
             return diskSpaces;
         }
-
         public async Task<DiskSpace> GetByIdAsync(int id)
         {
             var diskSpace = await _fileStorageDbContext.Set<DiskSpace>().FindAsync(id);
