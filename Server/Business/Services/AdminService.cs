@@ -32,6 +32,7 @@ namespace Business.Services
             _db = uow;
             _mapper = mapper;
             _userService = new UserService(uow, mapper);
+            _fileService = new FileService(uow, mapper);
         }
         public async Task<IEnumerable<UserModel>> GetAllUsersAsync(string? sortType, string? searchingUser)
         {
@@ -101,7 +102,7 @@ namespace Business.Services
                     return files.Where(x => x.Name.Contains(searchingName));
             }
         }
+       
 
-        
     }
 }
