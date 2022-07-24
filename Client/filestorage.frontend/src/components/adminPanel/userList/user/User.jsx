@@ -3,6 +3,7 @@ import personLogo from "../../../../assets/icon/person.svg";
 import "./user.css"
 import {useDispatch} from "react-redux";
 import {setCurrentUser} from "../../../../reducers/adminReducer";
+import sizeFormat from "../../../../utils/sizeFormat";
 
 const User = ({user}) => {
     const dispatch = useDispatch()
@@ -15,7 +16,7 @@ const User = ({user}) => {
             <img src={personLogo} alt="personLogo" className="user__img"/>
             <div className="user__name">{user.email}</div>
             <div className="user__role">{user.roleName}</div>
-            <div className="user__uds">{user.usedDiskSpace}</div>
+            <div className="user__uds">{sizeFormat(user.usedDiskSpace)}</div>
         </div>
     );
 };

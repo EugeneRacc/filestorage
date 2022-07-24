@@ -7,6 +7,7 @@ import avatarIcon from "../../../../../assets/icon/person.svg"
 import {getUserFiles} from "../../../../../actions/admin";
 import {setPopupDisplay} from "../../../../../reducers/fileReducer";
 import AdminPopup from "../../../AdminPopup";
+import sizeFormat from "../../../../../utils/sizeFormat";
 
 const UserDetails = () => {
     const dispatch = useDispatch()
@@ -49,11 +50,11 @@ const UserDetails = () => {
                     <div className="user-details__card">
                         <div className="user-details__block"><span className="user-details__email">Email: </span>{currentUser.email}</div>
                         <div className="user-details__block"><span className="user-details__role">Role: </span>{currentUser.roleName}</div>
-                        <div className="user-details__block"><span className="user-details__uds">Used disk space: </span>{currentUser.usedDiskSpace}</div>
+                        <div className="user-details__block"><span className="user-details__uds">Used disk space: </span>{sizeFormat(currentUser.usedDiskSpace)}</div>
                         <div className="user-details__block"><span className="user-details__disk">Disk space: </span>
-                        {currentUser.diskSpace === null
+                        {sizeFormat(currentUser.availableDiskSpace) === null
                             ? 0
-                            : currentUser.diskSpace}</div>
+                            : sizeFormat(currentUser.availableDiskSpace)}</div>
                         {currentUser.filesIds !== undefined ?
                             <div className="user-details__block"><span className="user-details__amount">Number of files:
                                 <span className="user-details__inner"> {currentUser.filesIds.length}

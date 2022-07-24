@@ -91,6 +91,7 @@ namespace Data.Repositories
         {
             var result = await _fileStorageDbContext.Users.AsNoTracking()
                 .Include(r => r.Role)
+                .Include(ds => ds.DiskSpace)
                 .FirstOrDefaultAsync(u => u.Id == id);
             return result;
         }

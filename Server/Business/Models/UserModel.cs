@@ -7,9 +7,6 @@ using Data.Enum;
 
 namespace Business.Models
 {
-    /// <summary>
-    /// User Model
-    /// </summary>
     public class UserModel
     {
         public int Id { get; set; }
@@ -20,5 +17,6 @@ namespace Business.Models
         public int? DiskSpaceId { get; set; }
         public int? RoleId { get; set; }
         public ICollection<int>? FilesIds { get; set; }
+        public string AvailableDiskSpace { get; set; }
     }
 }

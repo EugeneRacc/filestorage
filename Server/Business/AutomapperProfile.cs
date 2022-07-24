@@ -20,6 +20,8 @@ namespace Business
                     => u.MapFrom(src => src.UsedDiskSpade))
                 .ForMember(um => um.FilesIds, u
                     => u.MapFrom(src => src.Files.Select(x => x.Id)))
+                .ForMember(um => um.AvailableDiskSpace, u => 
+                u.MapFrom(src => src.DiskSpace.AvailableDiskSpace))
                 .ReverseMap();
 
             CreateMap<User, UserForUpdateModel>()

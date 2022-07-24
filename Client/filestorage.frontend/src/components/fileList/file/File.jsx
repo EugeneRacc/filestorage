@@ -8,6 +8,7 @@ import {pushToStack, setCurrentDir} from "../../../reducers/fileReducer";
 import {deleteFile, downloadFile} from "../../../actions/file";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import {CSSTransition} from "react-transition-group";
+import sizeFormat from "../../../utils/sizeFormat";
 
 const File = ({file}) => {
 
@@ -55,7 +56,7 @@ const File = ({file}) => {
                     <img src={shareLogo} className="file__share-logo" alt="share"/></div>
             </CopyToClipboard>}
             <div className="file__date">{file.date.split('T')[0]}</div>
-            <div className="file__size">{file.size}</div>
+            <div className="file__size">{sizeFormat(file.size)}</div>
             {file.type !== "dir" &&
                 <button onClick={(e) => downloadHandler(e)}
                     className="file__btn file__download">Download</button>}

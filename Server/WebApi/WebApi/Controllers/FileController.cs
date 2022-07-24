@@ -164,9 +164,9 @@ namespace WebApi.Controllers
                 var user = new AuthenticationService(_userService).GetUserIdByToken(authHeader);
                 addedlFile = await _fileService.UploadFileAsync(user.Result, parentId, uploadedFile);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e.Message);
             }
             return Ok(addedlFile);
         }
