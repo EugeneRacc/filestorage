@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -104,7 +103,10 @@ namespace Business.Services
             {
                 throw new FileStorageException("Can't delete this file");
             }
+            var user = await _userService.GetByIdWithNoTrackingAsync(userId);
+            user.UsedDiskSpace = (long.Parse(user.UsedDiskSpace ?? "0") - long.Parse(fileToDelete.Size ?? "0")).ToString();
             await _db.FileRepository.DeleteByIdAsync(fileToDelete.Id);
+            await _userService.UpdateAsync(user);
             await _db.SaveAsync();
         }
         public async Task DeleteAsync(int modelId)
@@ -212,17 +214,21 @@ namespace Business.Services
                 parent = await GetByIdAsync((int)resParentId);
             }
             var user = await _userService
-                .GetByIdAsync(userId);
+                .GetByIdWithNoTrackingAsync(userId);
             if (user == null)
                 throw new FileStorageException("No user with such an Id");
-            /*var userSpace = long.Parse(user.UsedDiskSpace);
+            //Here
 
-            if (userSpace + formFile.Length > double.Parse("4124123"))
+            var userSpace = long.Parse(user.UsedDiskSpace ?? throw new FileStorageException("Null disk space"));
+
+            if (userSpace + formFile.Length > long.Parse(user.AvailableDiskSpace))
                 throw new FileStorageException("No space on Disk");
 
             user.UsedDiskSpace = (userSpace + formFile.Length).ToString();
-            */
+            
             string path;
+
+            //Here
 
             if(parent != null)
             {
@@ -246,7 +252,7 @@ namespace Business.Services
             {
                 Name = formFile.FileName.Split(".")[0],
                 Type = formFile.FileName.Split('.')[^1],
-                //DiskSpace = formFile.Length.ToString(),
+                Size = formFile.Length.ToString(),
                 AccessLink = MD5Hash.GetMD5Hash(formFile.FileName.Split(".")[0] + formFile.FileName.Split('.')[^1]+ ";" + resParentId),
                 Path = parent != null ? parent.Path + "\\" + formFile.FileName : formFile.FileName,
                 ParentId = resParentId,
@@ -254,7 +260,7 @@ namespace Business.Services
             };
 
             await AddAsync(fileModel);
-            //await _userService.UpdateAsync(user);
+            await _userService.UpdateAsync(user);
 
             try
             {

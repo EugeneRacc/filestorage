@@ -27,7 +27,7 @@ namespace WebApi.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
         public AuthenticationController(IUnitOfWork uow, IMapper mapper, IConfiguration config)
         {
@@ -48,7 +48,7 @@ namespace WebApi.Controllers
             {
                 await _userService.AddAsync(value);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest(StatusCode(400));
             }
