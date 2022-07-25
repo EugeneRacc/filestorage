@@ -29,7 +29,7 @@ const Popup = () => {
                     <button className="popup__close" onClick={() => closeHandler()}>X</button>
                 </div>
                 <p>New Email</p>
-                <Input onChange={e => setEmail(e.target.value)} type="text" placeholder="Name of new folder" value={email} setValue={setEmail}/>
+                <Input onChange={e => setEmail(e.target.value)} type="text" placeholder="New email" value={email} setValue={setEmail}/>
                 <div className="popup__select">
                 <p>Change Role</p>
                     <select value={role} onChange={(e) => setRole(e.target.value)} className="disk__select">
