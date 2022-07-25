@@ -14,6 +14,7 @@ const Navbar = () => {
     const [searchTimeout, setSearchTimeout] = useState(false)
     const currentDir = useSelector(state => state.files.currentDir)
     const isAdmin = useSelector(state => state.user.currentUser.roleName);
+    const displayAdmPan = (isAuth && isAdmin === "Admin") ? "35%" : "50%"
     function searchHandler(e) {
         setSearchName(e.target.value)
         if(searchTimeout !== false){
@@ -41,6 +42,7 @@ const Navbar = () => {
                     type="text"
                     placeholder="Search by Name"
                     className="navbar__search"
+                    style={{marginLeft:displayAdmPan}}
                 />}
                 {!isAuth && <div className="navbar__login"><NavLink to="/login">Sign In </NavLink></div> }
                 {!isAuth && <div className="navbar__registration"><NavLink to="/registration">Sign Up</NavLink></div>}

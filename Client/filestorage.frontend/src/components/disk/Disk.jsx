@@ -5,9 +5,9 @@ import FileList from "../fileList/FileList";
 import "./disk.css"
 import Popup from "./Popup";
 import {setCurrentDir, setPopupDisplay} from "../../reducers/fileReducer";
-
 import fileUploadLogo from "../../assets/icon/file_upload.svg";
 import {useNavigate} from "react-router-dom";
+
 const Disk = () => {
     const dispatch = useDispatch();
     const currentDir = useSelector(state => state.files.currentDir)
