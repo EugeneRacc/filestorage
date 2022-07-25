@@ -84,17 +84,30 @@ export function uploadFile(file, dirId){
     }
 }
 
-export async function downloadFile(file){
-    const response = await fetch(`https://localhost:44368/api/1.0/file/download?id=${file.id}`,
-        {headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-    if(response.status === 200){
-        await DownloadClient(response, file);
+export async function downloadFile(file, role, userId){
+    if(role === "User") {
+        const response = await fetch(`https://localhost:44368/api/1.0/file/download?id=${file.id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+        if(response.status === 200){
+            await DownloadClient(response, file);
+        }
+    }
+    if(role === "Admin") {
+        const response = await fetch(`https://localhost:44368/api/1.0/admin/download?id=${file.id}&userId=${userId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+        if (response.status === 200) {
+            await DownloadClient(response, file);
+        }
     }
 }
-
 export async function downloadFileByAccessLink(link){
     const data = await fetch(`https://localhost:44368/api/1.0/file/share?link=${link.split("/").slice(-1)}`)
             .then(response => {
