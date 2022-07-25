@@ -26,10 +26,12 @@ namespace WebApi.Controllers
     {
         private readonly IUserService _userService;
         private readonly IAdminService _adminService;
+        private readonly IFileService _fileService;
         public AdminController(IUnitOfWork uow, IMapper mapper, IConfiguration configuration)
         {
             _userService = new UserService(uow, mapper, configuration);
             _adminService = new AdminService(uow, mapper, configuration);
+            _fileService = new FileService(uow, mapper, configuration);
         }
 
         /// <summary>
@@ -60,7 +62,35 @@ namespace WebApi.Controllers
             }
             return Ok(customers);
         }
-
+        /// <summary>
+        /// Downloads the file.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="userId">User that owns file</param>
+        /// <returns>Blob for downloading file</returns>
+        [HttpGet("download"), DisableRequestSizeLimit]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public FileContentResult DownloadFile([FromQuery] string id, string userId)
+        {
+            IEnumerable<FileModel> resultFiles;
+            DownloadFileModel resultDownloadFile;
+            try
+            {
+                resultDownloadFile = _fileService.DownloadFileAsync(int.Parse(userId), int.Parse(id)).Result;
+                return new FileContentResult(resultDownloadFile.Memory, resultDownloadFile.Extension)
+                {
+                    FileDownloadName = resultDownloadFile.FileName + "." + resultDownloadFile.Type
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
         /// <summary>
         /// Gets the UserModel by identifier.
         /// </summary>
