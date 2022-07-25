@@ -17,6 +17,7 @@ const File = ({file}) => {
     const [showSpan, setShowSpan] = useState(false)
     const isAdmin = useSelector(state => state.user.currentUser.roleName) === "Admin"
     const isCurrentUserNull = useSelector(state => state.users.currentUserId) !== null
+    const currentUser = useSelector(state => state.users.currentUserId)
     function openDirHandler() {
         if(isAdmin && isCurrentUserNull){
             return
@@ -29,7 +30,12 @@ const File = ({file}) => {
 
     function downloadHandler(e) {
         e.stopPropagation();
-        downloadFile(file);
+        if(!(isAdmin && isCurrentUserNull)){
+            downloadFile(file, "User");
+        }
+        else{
+            downloadFile(file, "Admin", currentUser.id);
+        }
     }
 
     function deleteFileHandler(event) {
@@ -60,7 +66,7 @@ const File = ({file}) => {
             {file.type !== "dir" &&
                 <button onClick={(e) => downloadHandler(e)}
                     className="file__btn file__download">Download</button>}
-            <button onClick={(e) => deleteFileHandler(e)} className="file__btn file__delete">Delete</button>
+            {!(isAdmin && isCurrentUserNull) && <button onClick={(e) => deleteFileHandler(e)} className="file__btn file__delete">Delete</button>}
         </div>
 
     );
