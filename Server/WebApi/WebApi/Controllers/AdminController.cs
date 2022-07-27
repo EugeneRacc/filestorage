@@ -27,13 +27,12 @@ namespace WebApi.Controllers
         private readonly IUserService _userService;
         private readonly IAdminService _adminService;
         private readonly IFileService _fileService;
-        public AdminController(IUnitOfWork uow, IMapper mapper, IConfiguration configuration)
+        public AdminController(IUserService userService, IAdminService adminService, IFileService fileService)
         {
-            _userService = new UserService(uow, mapper, configuration);
-            _adminService = new AdminService(uow, mapper, configuration);
-            _fileService = new FileService(uow, mapper, configuration);
+            _userService = userService;
+            _adminService = adminService;
+            _fileService = fileService;
         }
-
         /// <summary>
         /// Gets all UserModels.
         /// </summary>

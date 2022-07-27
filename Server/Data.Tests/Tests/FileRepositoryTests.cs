@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -120,7 +121,7 @@ namespace Data.Tests
             }
 
             [Fact]
-            public async Task Delete_ByUserId_ShouldDeleteUserFromDB()
+            public async Task Delete_ByFileId_ShouldDeleteFileFromDB()
             {
                 // Arrange
                 Seed();
@@ -148,21 +149,21 @@ namespace Data.Tests
             }
 
             [Fact]
-            public async Task Delete_ByUserModel_ShouldDeleteUserFromDB()
+            public void Delete_ByFileModel_ShouldDeleteFileFromDB()
             {
                 // Arrange
                 Seed();
                 var expectedLength = GetExpectedFiles().ToList().Count - 1;
 
                 //Act
-                await DeleteFile(GetOneFileModel());
-                var actualLength = _context.Users.ToList().Count;
+                DeleteFile(GetOneFileModel());
+                var actualLength = _context.Files.ToList().Count;
                 // Assert
                 Assert.Equal(expectedLength, actualLength);
             }
 
             [Fact]
-            public async Task GetAllAsyncWithDetails_ShouldReturnTenUsers()
+            public async Task GetAllAsyncWithDetails_ShouldReturnFiveFiles()
             {
                 // Arrange
                 Seed();
@@ -198,7 +199,7 @@ namespace Data.Tests
             };
                 var files = new List<File>()
             {
-                new File {Id = 1, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
+                new File {Id = 1, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Parse("06.03.2001")},
                 new File {Id = 2, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
                 new File {Id = 3, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
                 new File {Id = 4, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
@@ -220,7 +221,7 @@ namespace Data.Tests
             {
                 var files = new List<File>()
                 {
-                    new File {Id = 1, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
+                    new File {Id = 1, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Parse("06.03.2001")},
                     new File {Id = 2, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
                     new File {Id = 3, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
                     new File {Id = 4, Name = "1", Type = "dir", AccessLink="we", Size = "0", UserId = 1, ParentId = null, Path = "", Date = DateTime.Now},
@@ -242,7 +243,7 @@ namespace Data.Tests
                        UserId = 1,
                        ParentId = null,
                        Path = "",
-                       Date = DateTime.Now
+                       Date = DateTime.Parse("06.03.2001")
                    };
         }
             private async Task CreateFile(File entity)
@@ -250,10 +251,10 @@ namespace Data.Tests
                 await _repository.AddAsync(entity);
                 await _context.SaveChangesAsync();
             }
-            private async Task DeleteFile(File entity)
+            private void DeleteFile(File entity)
             {
                 _repository.Delete(entity);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             private async Task DeleteFileById(int id)
             {

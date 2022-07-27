@@ -29,10 +29,10 @@ namespace WebApi.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
-        public AuthenticationController(IUnitOfWork uow, IMapper mapper, IConfiguration config)
+        public AuthenticationController(IUserService userService,  IConfiguration configuration)
         {
-            _configuration = config;
-            _userService = new UserService(uow, mapper, config);
+            _userService = userService;
+            _configuration = configuration;
         }
         /// <summary>
         /// Register the new user into DB.
@@ -48,7 +48,7 @@ namespace WebApi.Controllers
             {
                 await _userService.AddAsync(value);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return BadRequest(StatusCode(400));
             }
