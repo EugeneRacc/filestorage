@@ -31,11 +31,6 @@ namespace Business.Services
             _configuration = configuration;
             _userService = new UserService(uow, mapper, configuration);
         }
-        public FileService(IUnitOfWork uow, IMapper mapper)
-        {
-            _db = uow;
-            this._mapper = mapper;
-        }
 
         public async Task<IEnumerable<FileModel>> GetAllAsync()
         {

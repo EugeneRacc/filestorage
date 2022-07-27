@@ -28,12 +28,6 @@ namespace Business.Services
             this.mapper = mapper;
             this.configuration = configuration;
         }
-
-        public UserService(IUnitOfWork uow, IMapper mapper)
-        {
-            db = uow;
-            this.mapper = mapper;
-        }
         public async Task<IEnumerable<UserModel>> GetAllAsync()
         {
             var customers = await db.UserRepository.GetAllWithDetailsAsync();

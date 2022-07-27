@@ -2,6 +2,7 @@
 using Business;
 using Data.Data;
 using Data.Entities;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,6 +63,21 @@ namespace Data.Tests
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
 
             return new Mapper(configuration);
+        }
+
+        public static IConfiguration CreateConfiguration()
+        {
+            var myConfiguration = new Dictionary<string, string>
+                {
+                    {"AllowedHosts", "*"},
+                    {"Jwt:Key", "DhftOS5uphK3vmCJQrexST1RsyjZBjXWRgJMFPU4"},
+                    {"Jwt:Issuer", "https://localhost:44368/"},
+                    {"Jwt:Audience", "https://localhost:44368/"},
+                };
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(myConfiguration)
+                .Build();
+            return configuration;
         }
 
     }
