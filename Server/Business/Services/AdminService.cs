@@ -30,13 +30,6 @@ namespace Business.Services
             _fileService = new FileService(uow, mapper, configuration);
             _userService = new UserService(uow, mapper, configuration);
         }
-        public AdminService(IUnitOfWork uow, IMapper mapper)
-        {
-            _db = uow;
-            _mapper = mapper;
-            _userService = new UserService(uow, mapper);
-            _fileService = new FileService(uow, mapper);
-        }
         public async Task<IEnumerable<UserModel>> GetAllUsersAsync(string? sortType, string? searchingUser)
         {
             var users = await _userService.GetAllAsync();

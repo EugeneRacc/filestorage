@@ -44,7 +44,7 @@ namespace Business.Tests
                 .Returns(GetTestCustomerModels());
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetAllUsersAsync(null, null)).ToList();
@@ -64,7 +64,7 @@ namespace Business.Tests
                 .Returns(GetTestCustomerModels());
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetAllUsersAsync(expectedSorting, null)).ToList();
@@ -84,7 +84,7 @@ namespace Business.Tests
                 .Returns(GetTestCustomerModels());
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetAllUsersAsync(expectedSorting, null)).ToList();
@@ -104,7 +104,7 @@ namespace Business.Tests
                 .Returns(GetTestCustomerModels());
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetAllUsersAsync(expectedSorting, null)).ToList();
@@ -125,7 +125,7 @@ namespace Business.Tests
                 .Returns(GetTestCustomerModels());
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetAllUsersAsync(expectedSorting, expectedEmail)).ToList();
@@ -146,7 +146,7 @@ namespace Business.Tests
                 .Returns(GetTestCustomerModels());
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetAllUsersAsync(expectedSorting, expectedEmail)).ToList();
@@ -167,7 +167,7 @@ namespace Business.Tests
                 .Returns(GetTestCustomerModels());
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetAllUsersAsync(expectedSorting, expectedEmail)).ToList();
@@ -187,7 +187,7 @@ namespace Business.Tests
                .Returns(GetTestFileModels());
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetUserFilesAsync(expectedUser, null, null)).ToList();
@@ -207,7 +207,7 @@ namespace Business.Tests
                .Returns(GetTestFileModels());
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetUserFilesAsync(expectedUser, null, null)).ToList();
@@ -230,7 +230,7 @@ namespace Business.Tests
                .Returns(GetTestFileModels());
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetUserFilesAsync(expectedUser, expectedSort, expectedName)).ToList();
@@ -253,7 +253,7 @@ namespace Business.Tests
                .Returns(GetTestFileModels());
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles);
-            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new AdminService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetUserFilesAsync(expectedUser, expectedSort, expectedName)).ToList();

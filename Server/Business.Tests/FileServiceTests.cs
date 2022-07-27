@@ -39,7 +39,7 @@ namespace Business.Tests
             var expected = GetTestFileModels;
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetAllAsync()).ToList();
@@ -56,7 +56,7 @@ namespace Business.Tests
             var expected = GetTestFileModels[0];
             _dbMock.Setup(x => x.FileRepository.GetByIdAsync(1))
                 .Returns(GetOneFile());
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = await fileService.GetByIdAsync(1);
@@ -73,7 +73,7 @@ namespace Business.Tests
             FileModel expected = null;
             _dbMock.Setup(x => x.FileRepository.GetByIdAsync(It.IsAny<int>()))
                 .Returns(() => null);
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await fileService.GetByIdAsync(100);
@@ -90,7 +90,7 @@ namespace Business.Tests
             var expected = GetTestFileModels[0];
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
   
             //act
             var actual = await fileService.GetByModelAsync(expected);
@@ -108,7 +108,7 @@ namespace Business.Tests
             expected.Name = "fdsfds";
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await fileService.GetByModelAsync(expected);
@@ -123,7 +123,7 @@ namespace Business.Tests
             //Arrange
             var expected = GetTestFileModels[0];
             _dbMock.Setup(x => x.FileRepository.AddAsync(It.IsAny<File>()));
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             await fileService.AddAsync(expected);
@@ -139,7 +139,7 @@ namespace Business.Tests
             //Arrange
             FileModel expected = null;
             _dbMock.Setup(x => x.FileRepository.AddAsync(It.IsAny<File>()));
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await fileService.AddAsync(expected);
@@ -155,7 +155,7 @@ namespace Business.Tests
             //Arrange
             FileModel expected = null;
             _dbMock.Setup(x => x.FileRepository.Update(It.IsAny<File>()));
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await userService.UpdateAsync(expected);
@@ -171,7 +171,7 @@ namespace Business.Tests
             //Arrange
             FileModel expected = GetTestFileModels[0];
             _dbMock.Setup(x => x.FileRepository.Update(It.IsAny<File>()));
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             await fileService.UpdateAsync(expected);
@@ -188,14 +188,14 @@ namespace Business.Tests
             int expected = 1;
             _dbMock.Setup(x => x.FileRepository.GetByIdAsync(It.IsAny<int>()))
                 .Returns(GetOneFile());
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await fileService.DeleteAsync(expected, userId: 1);
 
             //assert
+            await Assert.ThrowsAsync<FileStorageException>(act);
             _dbMock.Verify(x => x.SaveAsync(), Times.Never);
-            await Assert.ThrowsAsync<NullReferenceException>(act);
         }
 
         [Fact]
@@ -205,7 +205,7 @@ namespace Business.Tests
             int expected = 1;
             _dbMock.Setup(x => x.FileRepository.DeleteByIdAsync(It.IsAny<int>()))
                 .Returns(GetOneFile());
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             await fileService.DeleteAsync(expected);
@@ -222,7 +222,7 @@ namespace Business.Tests
             int expected = 100;
             _dbMock.Setup(x => x.FileRepository.DeleteByIdAsync(It.IsAny<int>()))
                 .Returns(GetOneFile());
-            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var fileService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             await fileService.DeleteAsync(expected);
@@ -240,7 +240,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: null)).ToList();
@@ -258,7 +258,7 @@ namespace Business.Tests
             List<FileModel> expected = new List<FileModel>();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: null)).ToList();
@@ -276,7 +276,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Date).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: "date")).ToList();
@@ -294,7 +294,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Name).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: "name")).ToList();
@@ -312,7 +312,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Type).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: "type")).ToList();
@@ -330,7 +330,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: null, sortType: "fdsfds")).ToList();
@@ -349,7 +349,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId && x.ParentId == expectedParentId).OrderBy(y => y.Date).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByParentIdAsync(userId: expectedUserId, parentId: expectedParentId, sortType: "date")).ToList();
@@ -367,7 +367,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByUserIdAsync(userId: expectedUserId,sortType: null)).ToList();
@@ -385,7 +385,7 @@ namespace Business.Tests
             List<FileModel> expected = new List<FileModel>();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByUserIdAsync(userId: expectedUserId, sortType: null)).ToList();
@@ -403,7 +403,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Date).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByUserIdAsync(userId: expectedUserId, sortType: "date")).ToList();
@@ -421,7 +421,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId).OrderBy(x => x.Name).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByUserIdAsync(userId: expectedUserId, sortType: "name")).ToList();
@@ -440,7 +440,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId && x.Name.Contains(expectedName)).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByName(userId: expectedUserId, expectedName)).ToList();
@@ -459,7 +459,7 @@ namespace Business.Tests
             var expected = GetTestFileModels.Where(x => x.UserId == expectedUserId && x.Name.Contains(expectedName)).ToList();
             _dbMock.Setup(x => x.FileRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnFiles());
-            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new FileService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetFilesByName(userId: expectedUserId, expectedName)).ToList();

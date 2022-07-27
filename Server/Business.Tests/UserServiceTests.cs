@@ -43,7 +43,7 @@ namespace Business.Tests
             var expected = GetTestCustomerModels;
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers());
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = (await userService.GetAllAsync()).ToList();
@@ -60,7 +60,7 @@ namespace Business.Tests
             var expected = GetTestCustomerModels[0];
             _dbMock.Setup(x => x.UserRepository.GetByIdWithDetailsAsync(1))
                 .Returns(GetOneUser());
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = await userService.GetByIdAsync(1);
@@ -77,7 +77,7 @@ namespace Business.Tests
             UserModel expected = null;
             _dbMock.Setup(x => x.UserRepository.GetByIdWithDetailsAsync(It.IsAny<int>()))
                 .Returns(() => null);
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await userService.GetByIdAsync(100);
@@ -94,7 +94,7 @@ namespace Business.Tests
             var expected = GetTestCustomerModels[0];
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers());
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = await userService.GetByUserCredentials(new UserLogin { Email = "email", Password="password"});
@@ -111,7 +111,7 @@ namespace Business.Tests
             UserModel expected = null;
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(() => null);
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await userService.GetByUserCredentials(new UserLogin { Email = "email", Password = "password" });
@@ -134,7 +134,7 @@ namespace Business.Tests
             _dbMock.Setup(x => x.UserRepository.GetAllAsync())
                .Returns(ReturnUsers());
             _dbMock.Setup(x => x.UserRepository.AddAsync(It.IsAny<User>()));
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             await userService.AddAsync(expected);
@@ -157,7 +157,7 @@ namespace Business.Tests
             _dbMock.Setup(x => x.UserRepository.GetAllAsync())
                .Returns(ReturnUsers());
             _dbMock.Setup(x => x.UserRepository.AddAsync(It.IsAny<User>()));
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await userService.AddAsync(expected);
@@ -180,7 +180,7 @@ namespace Business.Tests
             _dbMock.Setup(x => x.UserRepository.GetAllAsync())
                .Returns(ReturnUsers());
             _dbMock.Setup(x => x.UserRepository.AddAsync(It.IsAny<User>()));
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await userService.AddAsync(expected);
@@ -198,7 +198,7 @@ namespace Business.Tests
             _dbMock.Setup(x => x.UserRepository.GetAllAsync())
                .Returns(ReturnUsers());
             _dbMock.Setup(x => x.UserRepository.AddAsync(It.IsAny<User>()));
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await userService.AddAsync(expected);
@@ -214,7 +214,7 @@ namespace Business.Tests
             //Arrange
             UserModel expected = null;
             _dbMock.Setup(x => x.UserRepository.Update(It.IsAny<User>()));
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await userService.UpdateAsync(expected);
@@ -235,7 +235,7 @@ namespace Business.Tests
                 RoleName = "User"
             };
             _dbMock.Setup(x => x.UserRepository.Update(It.IsAny<User>()));
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
            await userService.UpdateAsync(expected);
@@ -257,7 +257,7 @@ namespace Business.Tests
             };
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             var actual = await userService.LogInAsync(expected);
@@ -279,7 +279,7 @@ namespace Business.Tests
             };
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await userService.LogInAsync(expected);
@@ -301,7 +301,7 @@ namespace Business.Tests
             };
             _dbMock.Setup(x => x.UserRepository.GetAllWithDetailsAsync())
                 .Returns(ReturnUsers);
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             Func<Task> act = async () => await userService.LogInAsync(expected);
@@ -318,7 +318,7 @@ namespace Business.Tests
             int expected = 1;
             _dbMock.Setup(x => x.UserRepository.DeleteByIdAsync(It.IsAny<int>()))
                 .Returns(ReturnUsers);
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             await userService.DeleteAsync(expected);
@@ -334,7 +334,7 @@ namespace Business.Tests
             int expected = 100;
             _dbMock.Setup(x => x.UserRepository.DeleteByIdAsync(It.IsAny<int>()))
                 .Returns(ReturnUsers);
-            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile());
+            var userService = new UserService(_dbMock.Object, SeedDb.CreateMapperProfile(), SeedDb.CreateConfiguration());
 
             //act
             await userService.DeleteAsync(expected);
