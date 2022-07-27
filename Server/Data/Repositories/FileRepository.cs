@@ -59,10 +59,6 @@ namespace Data.Repositories
             {
                 Delete(entity);
             }
-            else
-            {
-                throw new ArgumentNullException($"Entity with such an id isn't exist {nameof(entity)}");
-            }
         }
 
         public void Update(File entity)

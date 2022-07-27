@@ -25,11 +25,12 @@ namespace WebApi.Controllers
     {
         private readonly IFileService _fileService;
         private readonly IUserService _userService;
-        public FileController(IUnitOfWork uow, IMapper mapper, IConfiguration configuration)
+        public FileController(IUserService userService, IFileService fileService)
         {
-            _fileService = new FileService(uow, mapper, configuration);
-            _userService = new UserService(uow, mapper, configuration);
+            _userService = userService;
+            _fileService = fileService;
         }
+
         /// <summary>
         /// Creates the directory for user.
         /// </summary>

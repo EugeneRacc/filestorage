@@ -28,6 +28,7 @@ namespace Business.Services
             this.mapper = mapper;
             this.configuration = configuration;
         }
+
         public UserService(IUnitOfWork uow, IMapper mapper)
         {
             db = uow;
@@ -89,15 +90,14 @@ namespace Business.Services
                 throw new FileStorageException($"The customer with such an email already exist {nameof(model)}");
             }
 
-            if (model.Password.Length < 8)
+            if (model.Password?.Length < 8 || model.Password == null)
             {
                 throw new FileStorageException($"Password can't be less then 8 characters {nameof(model.Password)}");
             }
             model.Password = MD5Hash.GetMD5Hash(model.Password);
             var customer = mapper.Map<UserModel, User>(model);
-            int id = customer.Id;
-            if (customer == null)
-                return;
+            customer.DiskSpaceId = 1;
+            customer.DiskSpace = null;
             await db.UserRepository.AddAsync(customer);
             await db.SaveAsync();
            
@@ -117,12 +117,15 @@ namespace Business.Services
 
         public async Task<bool> LogInAsync(UserModel model)
         {
+            if(model == null || model.Email == null || model.Password == null)
+            {
+                throw new FileStorageException($"Can't be null {model}");
+            }
             var user = (await GetAllAsync()).FirstOrDefault(x => x.Email == model.Email);
-            if (user == null)
+            if (user == null || user.Password == null)
             {
                 throw new FileStorageException($"User with such email not found {model.Email}");
             }
-
             bool isPasswordValid = user.Password.Equals(MD5Hash.GetMD5Hash(model.Password));
             if (!isPasswordValid)
             {

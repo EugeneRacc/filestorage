@@ -17,6 +17,6 @@ namespace Business.Models
         public int? DiskSpaceId { get; set; }
         public int? RoleId { get; set; }
         public ICollection<int>? FilesIds { get; set; }
-        public string AvailableDiskSpace { get; set; }
+        public string? AvailableDiskSpace { get; set; }
     }
 }
